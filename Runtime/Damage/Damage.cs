@@ -18,7 +18,7 @@ namespace GlitchedPolygons.Damage
         public DamageType damageType;
 
         /// <summary>
-        /// If the damage was due to a bullet impact, this is its <xref href="RaycastHit?alt=RaycastHit" />.
+        /// If the damage was due to a bullet impact, this is its <see cref="RaycastHit" />.
         /// </summary>
         public RaycastHit damageBulletRaycastHit;
 
