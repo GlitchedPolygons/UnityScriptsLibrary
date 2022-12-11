@@ -6,7 +6,7 @@ namespace GlitchedPolygons.Utilities
     /// This class is useful if you want to save your
     /// combined meshes to disk for prefabbing or for
     /// later usage in other scenes without breaking the reference.<para> </para>
-    /// When you combine painted meshes, the <see cref="MeshFilter"/>'s mesh is stored inside
+    /// When you combine painted meshes, the <a href="https://docs.unity3d.com/ScriptReference/MeshFilter.html">MeshFilter</a>'s mesh is stored inside
     /// the current scene's root (which means it cannot be accessed, making it 
     /// thus impossible to store the mesh in a prefab).<para> </para>
     /// If you intend to use the combined mesh later on (e.g. via a prefab), you 
@@ -15,7 +15,7 @@ namespace GlitchedPolygons.Utilities
     /// Once you saved the mesh asset to disk, the script is no longer needed and deletes itself.
     /// It's not needed at runtime either, so it will destroy itself on Start too... 
     /// </summary>
-    /// <seealso cref="UnityEngine.MonoBehaviour" />
+    /// <seealso cref="MonoBehaviour" />
     public sealed class SaveCombinedMesh : MonoBehaviour
     {
         private void Start()

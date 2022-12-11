@@ -34,7 +34,7 @@ namespace GlitchedPolygons.Logic
         private int targetCount = 0;
 
         /// <summary>
-        /// <see cref="UnityEvent"/> for inspector event hookups that are invoked when the <see cref="count"/> reaches <see cref="targetCount"/>.
+        /// <a href="https://docs.unity3d.com/ScriptReference/Events.UnityEvent.html">UnityEvent</a> for inspector event hookups that are invoked when the <see cref="count"/> reaches <see cref="targetCount"/>.
         /// </summary>
         [SerializeField]
         private UnityEvent onReachedTargetCount;

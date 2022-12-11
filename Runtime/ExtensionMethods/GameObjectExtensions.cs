@@ -3,15 +3,17 @@
 namespace GlitchedPolygons.ExtensionMethods
 {
     /// <summary>
-    /// Static class containing useful <see cref="GameObject"/> extension methods.
+    /// Static class containing useful <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a> extension methods.
     /// </summary>
     public static class GameObjectExtensions
     {
         /// <summary>
-        /// Disables this <see cref="GameObject"/>'s <see cref="Renderer"/> component and all child <see cref="Renderer"/>s. <para> </para> 
+        /// Disables this <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a>'s
+        /// <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a> component and all child
+        /// <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s. <para> </para> 
         /// </summary>
-        /// <param name="gameObject">The <see cref="GameObject"/> whose child <see cref="Renderer"/>s you want to disable.</param>
-        /// <param name="includeInactiveRenderers">Should inactive child <see cref="Renderer"/>s be considered?</param>
+        /// <param name="gameObject">The <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a> whose child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s you want to disable.</param>
+        /// <param name="includeInactiveRenderers">Should inactive child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s be considered?</param>
         public static void DisableAllChildRenderers(this GameObject gameObject, bool includeInactiveRenderers = false)
         {
             Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>(includeInactiveRenderers);
@@ -28,10 +30,10 @@ namespace GlitchedPolygons.ExtensionMethods
         }
 
         /// <summary>
-        /// Enables this <see cref="GameObject"/>'s <see cref="Renderer"/> component and all child <see cref="Renderer"/>s. <para> </para> 
+        /// Enables this <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a>'s <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a> component and all child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s. <para> </para> 
         /// </summary>
-        /// <param name="gameObject">The <see cref="GameObject"/> whose child <see cref="Renderer"/>s you want to enable.</param>
-        /// <param name="includeInactiveRenderers">Should inactive child <see cref="Renderer"/>s be considered?</param>
+        /// <param name="gameObject">The <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a> whose child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s you want to enable.</param>
+        /// <param name="includeInactiveRenderers">Should inactive child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s be considered?</param>
         public static void EnableAllChildRenderers(this GameObject gameObject, bool includeInactiveRenderers = false)
         {
             Renderer[] renderers = gameObject.GetComponentsInChildren<Renderer>(includeInactiveRenderers);

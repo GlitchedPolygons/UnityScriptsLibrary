@@ -3,15 +3,15 @@
 namespace GlitchedPolygons.ExtensionMethods
 {
     /// <summary>
-    /// <see cref="UnityEngine.Vector3"/> extension methods.
+    /// <a href="https://docs.unity3d.com/ScriptReference/Vector3">UnityEngine.Vector3</a> extension methods.
     /// </summary>
     public static class Vector2Extensions
     {
         /// <summary>
         /// Returns <c>UnityEngine.Random.Range(vector.x, vector.y)</c>. 
         /// </summary>
-        /// <param name="vector">The <see cref="Vector2"/> that contains the range within which a random number should be picked.</param>
-        /// <returns>A random number between <see cref="Vector2.x"/> and <see cref="Vector2.y"/>.</returns>
+        /// <param name="vector">The <a href="https://docs.unity3d.com/ScriptReference/Vector2">UnityEngine.Vector2</a> that contains the range within which a random number should be picked.</param>
+        /// <returns>A random number between <a href="https://docs.unity3d.com/ScriptReference/Vector2-x">Vector2.x</a> and <a href="https://docs.unity3d.com/ScriptReference/Vector2-y">Vector2.y</a>.</returns>
         public static float GetRandomValue(this Vector2 vector)
         {
             return Random.Range(vector.x, vector.y);

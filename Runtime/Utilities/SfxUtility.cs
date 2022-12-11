@@ -8,12 +8,12 @@ namespace GlitchedPolygons.Utilities
     public static class SfxUtility
     {
         /// <summary>
-        /// The <see cref="AudioSource"/> component that plays global sfx.
+        /// The <a href="https://docs.unity3d.com/ScriptReference/AudioSource.html">AudioSource</a> component that plays global sfx.
         /// </summary>
         private static AudioSource globalAudioSoos = null;
 
         /// <summary>
-        /// The <see cref="AudioSource"/> component that plays local sfx.
+        /// The <a href="https://docs.unity3d.com/ScriptReference/AudioSource.html">AudioSource</a> component that plays local sfx.
         /// </summary>
         private static AudioSource localAudioSoos = null;
 

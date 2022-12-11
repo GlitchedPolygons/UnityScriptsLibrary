@@ -8,10 +8,10 @@ namespace GlitchedPolygons.ExtensionMethods
     public static class GetOrAddComponentExtension
     {
         /// <summary>
-        /// Tries to get the component on this <see cref="GameObject"/> and adds one if there wasn't one attached already.
+        /// Tries to get the component on this <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a> and adds one if there wasn't one attached already.
         /// </summary>
-        /// <typeparam name="T">The type of <see cref="Component"/> to get or add.</typeparam>
-        /// <param name="gameObject">The <see cref="GameObject"/> whose component you want to get or add.</param>
+        /// <typeparam name="T">The type of <a href="https://docs.unity3d.com/Documentation/ScriptReference/Component.html">Component</a> to get or add.</typeparam>
+        /// <param name="gameObject">The <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a> whose component you want to get or add.</param>
         /// <returns>The component.</returns>
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
@@ -25,10 +25,10 @@ namespace GlitchedPolygons.ExtensionMethods
         }
 
         /// <summary>
-        /// Tries to get the component on this <see cref="Component"/> and adds one if there wasn't one attached already.
+        /// Tries to get the component on this <a href="https://docs.unity3d.com/Documentation/ScriptReference/Component.html">Component</a> and adds one if there wasn't one attached already.
         /// </summary>
-        /// <typeparam name="T">The type of <see cref="Component"/> to get or add.</typeparam>
-        /// <param name="component">The <see cref="Component"/> whose component you want to get or add.</param>
+        /// <typeparam name="T">The type of <a href="https://docs.unity3d.com/Documentation/ScriptReference/Component.html">Component</a> to get or add.</typeparam>
+        /// <param name="component">The <a href="https://docs.unity3d.com/Documentation/ScriptReference/Component.html">Component</a> whose component you want to get or add.</param>
         /// <returns>The component.</returns>
         public static T GetOrAddComponent<T>(this Component component) where T : Component
         {

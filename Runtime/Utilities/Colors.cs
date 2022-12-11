@@ -3,7 +3,7 @@
 namespace GlitchedPolygons.Utilities
 {
     /// <summary>
-    /// Data holder class that holds useful readonly <see cref="Color"/> constants.
+    /// Data holder class that holds useful readonly <a href="https://docs.unity3d.com/ScriptReference/Color.html">UnityEngine.Color</a> constants.
     /// </summary>
     public static class Colors
     {

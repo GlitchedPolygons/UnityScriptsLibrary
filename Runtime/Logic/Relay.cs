@@ -27,7 +27,7 @@ namespace GlitchedPolygons.Logic
         private float delay = 0.0f;
 
         /// <summary>
-        /// <see cref="UnityEvent"/> for inspector hookups.
+        /// <a href="https://docs.unity3d.com/ScriptReference/Events.UnityEvent.html">UnityEvent</a> for inspector hookups.
         /// </summary>
         [SerializeField]
         private UnityEvent onFire;

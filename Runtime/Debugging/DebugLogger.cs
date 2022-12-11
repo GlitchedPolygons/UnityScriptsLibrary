@@ -8,7 +8,7 @@ namespace GlitchedPolygons.Debugging
     public class DebugLogger : MonoBehaviour
     {
         /// <summary>
-        /// Calls <see cref="Debug.Log"/>.
+        /// Calls <a href="https://docs.unity3d.com/ScriptReference/Debug.Log.html">Debug.Log</a>.
         /// </summary>
         /// <param name="message">The message to print to the console.</param>
         public void Log(string message)
@@ -17,7 +17,7 @@ namespace GlitchedPolygons.Debugging
         }
 
         /// <summary>
-        /// Calls <see cref="Debug.LogWarning"/>.
+        /// Calls <a href="https://docs.unity3d.com/ScriptReference/Debug.LogWarning.html">Debug.LogWarning</a>.
         /// </summary>
         /// <param name="message">The warning message to print to the console.</param>
         public void LogWarning(string message)
@@ -26,7 +26,7 @@ namespace GlitchedPolygons.Debugging
         }
 
         /// <summary>
-        /// Calls <see cref="Debug.LogError"/>.
+        /// Calls <a href="https://docs.unity3d.com/ScriptReference/Debug.LogError.html">Debug.LogError</a>.
         /// </summary>
         /// <param name="message">The error message to print to the console.</param>
         public void LogError(string message)

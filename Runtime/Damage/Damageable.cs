@@ -12,8 +12,8 @@ namespace GlitchedPolygons.Damage
     public class Damageable : MonoBehaviour
     {
         /// <summary>
-        /// This event is raised when <see cref="ApplyDamage(float, DamageType, RaycastHit)"/> is called.<para> </para>
-        /// Subscribe any interested damage receivers to this event. Damage amount, type and eventual bullet <see cref="RaycastHit"/> are passed as event arguments (<see cref="Damage"/>).<para> </para>  
+        /// This event is raised when <see cref="ApplyDamage"/> is called.<para> </para>
+        /// Subscribe any interested damage receivers to this event. Damage amount, type and eventual bullet <a href="https://docs.unity3d.com/ScriptReference/RaycastHit.html">RaycastHit</a> are passed as event arguments (<see cref="Damage"/>).<para> </para>  
         /// </summary>
         public event Action<Damage> Damaged;
 
@@ -35,7 +35,7 @@ namespace GlitchedPolygons.Damage
         /// </summary>
         /// <param name="damageAmount">The amount of damage that should be applied.</param>
         /// <param name="damageType">The type of damage that should be applied.</param>
-        /// <param name="bulletHit">If the <see cref="DamageType"/> is <see cref="DamageType.Bullet"/>, then pass in the bullet's <see cref="RaycastHit"/>.<para> </para>If a <see cref="RaycastHit"/> doesn't make sense with the specified <see cref="DamageType"/>, then pass <c>default(RaycastHit)</c> as a parameter.</param>
+        /// <param name="bulletHit">If the <see cref="DamageType"/> is <see cref="DamageType.Bullet"/>, then pass in the bullet's <a href="https://docs.unity3d.com/ScriptReference/RaycastHit.html">RaycastHit</a>.<para> </para>If a <a href="https://docs.unity3d.com/ScriptReference/RaycastHit.html">RaycastHit</a> doesn't make sense with the specified <see cref="DamageType"/>, then pass <c>default(RaycastHit)</c> as a parameter.</param>
         public void ApplyDamage(float damageAmount, DamageType damageType, RaycastHit bulletHit)
         {
             // Invoke the public event.

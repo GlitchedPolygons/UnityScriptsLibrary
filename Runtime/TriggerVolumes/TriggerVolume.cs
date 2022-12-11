@@ -7,7 +7,7 @@ using GlitchedPolygons.ExtensionMethods;
 namespace GlitchedPolygons.TriggerVolumes
 {
     /// <summary>
-    /// Represents a trigger volume that fires various events when something has entered/escaped its <see cref="UnityEngine.BoxCollider"/> volume.<para> </para>
+    /// Represents a trigger volume that fires various events when something has entered/escaped its <a href="https://docs.unity3d.com/ScriptReference/BoxCollider.html">UnityEngine.BoxCollider</a> volume.<para> </para>
     /// You can decide what happens when specific objects enter this trigger volume by hooking up the events inside the <see cref="TriggerVolume"/>'s inspector.
     /// </summary>
     [ExecuteInEditMode]
@@ -30,7 +30,7 @@ namespace GlitchedPolygons.TriggerVolumes
         protected int maxEvents = 0;
 
         /// <summary>
-        /// Only intruders that pass this <see cref="LayerMask"/> filter will be able to fire the OnTriggerEnter/Exit events.
+        /// Only intruders that pass this <a href="https://docs.unity3d.com/Documentation/ScriptReference/LayerMask.html">LayerMask</a> filter will be able to fire the OnTriggerEnter/Exit events.
         /// </summary>
         [SerializeField]
         [Header("Filters")]
@@ -46,7 +46,7 @@ namespace GlitchedPolygons.TriggerVolumes
         protected string[] tags = { };
 
         /// <summary>
-        /// You can filter specific <see cref="Collider"/>s to be the only ones feasible of raising the OnTriggerEnter/Exit events (after filtering by layer and tag).
+        /// You can filter specific <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a>s to be the only ones feasible of raising the OnTriggerEnter/Exit events (after filtering by layer and tag).
         /// </summary>
         [SerializeField]
         [Tooltip("You can filter specific colliders to be the only ones feasible of raising the OnTriggerEnter/Exit events (after filtering by layer and tag).")]
@@ -235,11 +235,11 @@ namespace GlitchedPolygons.TriggerVolumes
         }
 
         /// <summary>
-        /// Verifies that a <see cref="Collider"/> is a valid intruder based on the filters set up on this <see cref="TriggerVolume"/>.<para> </para>
+        /// Verifies that a <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> is a valid intruder based on the filters set up on this <see cref="TriggerVolume"/>.<para> </para>
         /// Only valid intruders may raise the <see cref="onTriggerEnter"/> and <see cref="onTriggerExit"/> events!
         /// </summary>
-        /// <param name="intruder">The <see cref="Collider"/> to check.</param>
-        /// <returns>Whether the intruder <see cref="Collider"/> passed the specified filters or not. True means that the <see cref="Collider"/> is feasible of raising the <see cref="onTriggerEnter"/> and <see cref="onTriggerExit"/> events.</returns>
+        /// <param name="intruder">The <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> to check.</param>
+        /// <returns>Whether the intruder <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> passed the specified filters or not. True means that the <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> is feasible of raising the <see cref="onTriggerEnter"/> and <see cref="onTriggerExit"/> events.</returns>
         private bool IsValidIntruder(Collider intruder)
         {
             // First check if the maximum amount of event fires has been reached (if there is one).
@@ -304,9 +304,9 @@ namespace GlitchedPolygons.TriggerVolumes
         }
 
         /// <summary>
-        /// This unity message is executed when something enters our trigger <see cref="Collider"/>.
+        /// This unity message is executed when something enters our trigger <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a>.
         /// </summary>
-        /// <param name="intruder">The <see cref="Collider"/> that entered our <see cref="TriggerVolume"/>.</param>
+        /// <param name="intruder">The <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> that entered our <see cref="TriggerVolume"/>.</param>
         private void OnTriggerEnter(Collider intruder)
         {
             if (onTriggerEnter == null)
@@ -321,7 +321,7 @@ namespace GlitchedPolygons.TriggerVolumes
         }
 
         /// <summary>
-        /// Fires when a <see cref="Collider"/> exits the <see cref="TriggerVolume"/>
+        /// Fires when a <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> exits the <see cref="TriggerVolume"/>
         /// </summary>
         /// <param name="intruder">The collider that escaped from the trigger volume.</param>
         private void OnTriggerExit(Collider intruder)

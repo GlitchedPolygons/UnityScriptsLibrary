@@ -84,10 +84,10 @@ namespace GlitchedPolygons.Input
         }
 
         /// <summary>
-        /// Returns a button's currently assigned <see cref="KeyCode"/>s.
+        /// Returns a button's currently assigned <xref href="KeyCode?alt=KeyCode"/>s.
         /// </summary>
-        /// <param name="buttonIndex">The button whose mapped <see cref="KeyCode"/>s you want to retrieve.</param>
-        /// <returns>The button's assigned <see cref="KeyCode"/>s.</returns>
+        /// <param name="buttonIndex">The button whose mapped <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>s you want to retrieve.</param>
+        /// <returns>The button's assigned <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>s.</returns>
         public KeyCode[] GetButtonKeys(int buttonIndex)
         {
             if (buttonIndex < 0 || buttonIndex >= buttons.Length)
@@ -99,10 +99,10 @@ namespace GlitchedPolygons.Input
         }
 
         /// <summary>
-        /// Reassign a button's <see cref="KeyCode"/>s.
+        /// Reassign a button's <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>s.
         /// </summary>
         /// <param name="buttonIndex">The button to modify.</param>
-        /// <param name="newKeys">The new <see cref="KeyCode"/>s to remap the button to.</param>
+        /// <param name="newKeys">The new <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>s to remap the button to.</param>
         public void ReassignButton(int buttonIndex, KeyCode[] newKeys)
         {
             if (buttonIndex < 0 || buttonIndex >= buttons.Length)
@@ -199,7 +199,7 @@ namespace GlitchedPolygons.Input
         /// Checks if a game button has been pressed or released and invokes the corresponding events.
         /// </summary>
         /// <param name="buttonIndex">The button to check.</param>
-        /// <param name="keyCode">The <see cref="KeyCode"/> mapped to the button.</param>
+        /// <param name="keyCode">The <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a> mapped to the button.</param>
         private void CheckGameButton(int buttonIndex, KeyCode keyCode)
         {
             if (IsMouseButton(keyCode))
@@ -232,7 +232,7 @@ namespace GlitchedPolygons.Input
         /// Checks if a button has been pressed or released and invokes the corresponding events.
         /// </summary>
         /// <param name="buttonIndex">The button to check.</param>
-        /// <param name="keyCodes">The <see cref="KeyCode"/>s mapped to the button.</param>
+        /// <param name="keyCodes">The <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>s mapped to the button.</param>
         private void CheckGameButton(int buttonIndex, KeyCode[] keyCodes)
         {
             for (int i = keyCodes.Length - 1; i >= 0; i--)
@@ -242,10 +242,10 @@ namespace GlitchedPolygons.Input
         }
 
         /// <summary>
-        /// Is the specified <see cref="KeyCode"/> a mouse button?
+        /// Is the specified <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a> a mouse button?
         /// </summary>
-        /// <param name="keyCode">The <see cref="KeyCode"/> to test against being a mouse button or keyboard key.</param>
-        /// <returns>Whether the passed <see cref="KeyCode"/> was a mouse button or not.</returns>
+        /// <param name="keyCode">The <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a> to test against being a mouse button or keyboard key.</param>
+        /// <returns>Whether the passed <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a> was a mouse button or not.</returns>
         private bool IsMouseButton(KeyCode keyCode)
         {
             switch (keyCode)
@@ -264,11 +264,11 @@ namespace GlitchedPolygons.Input
         }
 
         /// <summary>
-        /// Gets the numeric index of a mouse button's <see cref="KeyCode"/>.<para> </para>
+        /// Gets the numeric index of a mouse button's <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>.<para> </para>
         /// E.g. <see cref="KeyCode.Mouse0"/> = 0, <see cref="KeyCode.Mouse1"/> = 1, etc...
         /// </summary>
-        /// <param name="keyCode">The mouse button's <see cref="KeyCode"/>.</param>
-        /// <returns>The numeric index of a mouse button's <see cref="KeyCode"/>.</returns>
+        /// <param name="keyCode">The mouse button's <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>.</param>
+        /// <returns>The numeric index of a mouse button's <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>.</returns>
         private int GetMouseKeyIndex(KeyCode keyCode)
         {
             switch (keyCode)

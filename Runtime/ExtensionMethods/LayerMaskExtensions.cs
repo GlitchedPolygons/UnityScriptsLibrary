@@ -3,16 +3,16 @@
 namespace GlitchedPolygons.ExtensionMethods
 {
     /// <summary>
-    /// <see cref="LayerMask"/> extension methods.
+    /// <a href="https://docs.unity3d.com/Documentation/ScriptReference/LayerMask.html">LayerMask</a> extension methods.
     /// </summary>
     public static class LayerMaskExtensions
     {
         /// <summary>
-        /// Checks whether a <see cref="LayerMask"/> contains a specific layer or not.
+        /// Checks whether a <a href="https://docs.unity3d.com/Documentation/ScriptReference/LayerMask.html">LayerMask</a> contains a specific layer or not.
         /// </summary>
-        /// <param name="layerMask">The <see cref="LayerMask"/> to check against.</param>
+        /// <param name="layerMask">The <a href="https://docs.unity3d.com/Documentation/ScriptReference/LayerMask.html">LayerMask</a> to check against.</param>
         /// <param name="layer">The layer to check.</param>
-        /// <returns>Whether the <see cref="LayerMask"/> contains the layer or not.</returns>
+        /// <returns>Whether the <a href="https://docs.unity3d.com/Documentation/ScriptReference/LayerMask.html">LayerMask</a> contains the layer or not.</returns>
         public static bool Contains(this LayerMask layerMask, int layer)
         {
             return layerMask == (layerMask | (1 << layer));

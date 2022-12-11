@@ -9,7 +9,7 @@ namespace GlitchedPolygons.Input
     /// <summary>
     /// The almighty xbox controller.<para> </para>
     /// This is accessible from the xbox itself 
-    /// or Windows exclusively (due to <see cref="XInput"/> requiring DirectX to work).
+    /// or Windows exclusively (due to XInput requiring DirectX to work).
     /// </summary>
     [RequireComponent(typeof(XInput))]
     public class XboxController : InputDevice
