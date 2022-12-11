@@ -1,0 +1,16 @@
+{
+    "name": "com.glitchedpolygons.unity.cslib.editor",
+    "rootNamespace": "GlitchedPolygons",
+    "references": [
+        "GUID:86e26594dfd11aa4b96922f301129281"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
