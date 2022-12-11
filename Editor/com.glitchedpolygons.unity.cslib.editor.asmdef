@@ -1,8 +1,8 @@
 {
-    "name": "com.glitchedpolygons.unity.cslib.editor",
+    "name": "GlitchedPolygons.Editor",
     "rootNamespace": "GlitchedPolygons",
     "references": [
-        "GUID:86e26594dfd11aa4b96922f301129281"
+        "GlitchedPolygons"
     ],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
