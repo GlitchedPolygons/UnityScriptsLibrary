@@ -1,7 +1,7 @@
 {
   "name": "com.glitchedpolygons.unity.cslib",
   "displayName": "Glitched Polygons Scripts Library",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "unity": "2022.2",
   "description": "Reusable, modular C# scripts library for Unity projects.",
   "author": {"name": "Glitched Polygons", "url" : "https://glitchedpolygons.com/"},

@@ -404,38 +404,29 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                 }
             }
 
-            try
+            if (loadByName)
             {
-                if (loadByName)
-                {
-                    string sceneName = transitorySavegame?.Root?.Element("map")?.Attribute("name")?.Value;
+                string sceneName = transitorySavegame?.Root?.Element("map")?.Attribute("name")?.Value;
 
-                    if (sceneName.NotNullNotEmpty())
-                    {
-#if UNITY_EDITOR
-                        Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene name: {sceneName}");
-#endif
-                        SceneManager.sceneLoaded += OnNewSceneLoaded;
-                        SceneManager.LoadScene(sceneName);
-                    }
-                }
-                else
+                if (sceneName.NotNullNotEmpty())
                 {
-                    if (int.TryParse(transitorySavegame?.Root?.Element("map")?.FirstAttribute.Value, out int index))
-                    {
 #if UNITY_EDITOR
-                        Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene build index: {index}");
+                    Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene name: {sceneName}");
 #endif
-                        SceneManager.sceneLoaded += OnNewSceneLoaded;
-                        SceneManager.LoadScene(index);
-                    }
+                    SceneManager.sceneLoaded += OnNewSceneLoaded;
+                    SceneManager.LoadScene(sceneName);
                 }
             }
-            catch (Exception e)
+            else
             {
+                if (int.TryParse(transitorySavegame?.Root?.Element("map")?.FirstAttribute.Value, out int index))
+                {
 #if UNITY_EDITOR
-                Debug.LogError($"{nameof(XmlSavegameManager)}: Couldn't load savegame! Error message: {e}");
+                    Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene build index: {index}");
 #endif
+                    SceneManager.sceneLoaded += OnNewSceneLoaded;
+                    SceneManager.LoadScene(index);
+                }
             }
         }
 
