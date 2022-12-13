@@ -1,7 +1,7 @@
-[![API](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/UnityScriptsLibraryDocs/api/index.html)
-
 # [Glitched Polygons](https://glitchedpolygons.com/)
 ## Unity Scripts Library
+
+[![API](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/UnityScriptsLibraryDocs/api/index.html)
 
 Welcome to the official Glitched Polygons scripts library for your free and open-source usage within your next Unity project :)  
 
