@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Security.Cryptography;
-
+using GlitchedPolygons.ExtensionMethods;
 using Debug = UnityEngine.Debug;
 
 namespace GlitchedPolygons.Utilities
@@ -24,14 +24,14 @@ namespace GlitchedPolygons.Utilities
         /// <summary>
         /// Empty <c>byte[]</c> array for handling certain edge cases/failures (e.g. encrypting/decrypting an empty array will result in an empty array).
         /// </summary>
-        private static readonly byte[] EMPTY_BYTE_ARRAY = new byte[0];
+        private static readonly byte[] EMPTY_BYTE_ARRAY = Array.Empty<byte>();
 
         /// <summary>
         /// Encrypt data using a specific key and salt string.
         /// </summary>
         /// <param name="data">The data you want to encrypt.</param>
         /// <param name="key">The cryptographic key with which the data should be encrypted. Make this at least 32 characters long!</param>
-        /// <param name="salt">The crypto salt to use for key derivation (should also be >32 characters long).</param>
+        /// <param name="salt">The crypto salt to use for key derivation (should also be at least 32 characters long).</param>
         /// <param name="rfcIterations">The amount of iterations that the <see cref="Rfc2898DeriveBytes"/> algo should perform to derive the key.</param>
         /// <returns>The encrypted bytes.</returns>
         public static byte[] Encrypt(byte[] data, string key, string salt, int rfcIterations)
@@ -81,7 +81,7 @@ namespace GlitchedPolygons.Utilities
             }
             finally
             {
-                ClearIV();
+                CryptographicOperations.ZeroMemory(IV);
             }
         }
 
@@ -140,18 +140,7 @@ namespace GlitchedPolygons.Utilities
             }
             finally
             {
-                ClearIV();
-            }
-        }
-
-        /// <summary>
-        /// Clears the <see cref="IV"/> by setting all its array elements to <c>0</c>.
-        /// </summary>
-        private static void ClearIV()
-        {
-            for (int i = IV.Length - 1; i >= 0; i--)
-            {
-                IV[i] = 0;
+                CryptographicOperations.ZeroMemory(IV);
             }
         }
     }
