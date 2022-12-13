@@ -328,6 +328,8 @@ namespace GlitchedPolygons.SavegameFramework.Json
 
             if (task.IsCompletedSuccessfully && transitorySavegame is not null)
             {
+                AsyncOperation loadOperation = null;
+                
                 if (loadByName)
                 {
                     string sceneName = transitorySavegame.mapName;
@@ -338,13 +340,23 @@ namespace GlitchedPolygons.SavegameFramework.Json
                         Debug.Log($"{nameof(JsonSavegameManager)}: Load savegame by scene name: {sceneName}");
 #endif
                         SceneManager.sceneLoaded += OnNewSceneLoaded;
-                        SceneManager.LoadScene(sceneName);
+                        loadOperation = SceneManager.LoadSceneAsync(sceneName);
                     }
                 }
                 else
                 {
                     SceneManager.sceneLoaded += OnNewSceneLoaded;
-                    SceneManager.LoadScene(transitorySavegame.mapIndex);
+                    loadOperation = SceneManager.LoadSceneAsync(transitorySavegame.mapIndex);
+                }
+                
+                if (loadOperation != null)
+                {
+                    while (!loadOperation.isDone)
+                    {
+                        yield return YieldInstructions.GetWaitForSecondsRealtime(64);
+                    }
+
+                    loadOperation.allowSceneActivation = true;
                 }
             }
             else

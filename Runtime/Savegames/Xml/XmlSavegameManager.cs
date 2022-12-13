@@ -404,31 +404,53 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                 }
             }
 
-            if (loadByName)
+            if (task.IsCompletedSuccessfully && transitorySavegame is not null)
             {
-                string sceneName = transitorySavegame?.Root?.Element("map")?.Attribute("name")?.Value;
+                AsyncOperation loadOperation = null;
 
-                if (sceneName.NotNullNotEmpty())
+                if (loadByName)
                 {
+                    string sceneName = transitorySavegame.Root?.Element("map")?.Attribute("name")?.Value;
+
+                    if (sceneName.NotNullNotEmpty())
+                    {
 #if UNITY_EDITOR
-                    Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene name: {sceneName}");
+                        Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene name: {sceneName}");
 #endif
-                    SceneManager.sceneLoaded += OnNewSceneLoaded;
-                    SceneManager.LoadScene(sceneName);
+                        SceneManager.sceneLoaded += OnNewSceneLoaded;
+                        loadOperation = SceneManager.LoadSceneAsync(sceneName);
+                    }
+                }
+                else
+                {
+                    if (int.TryParse(transitorySavegame.Root?.Element("map")?.FirstAttribute.Value, out int index))
+                    {
+#if UNITY_EDITOR
+                        Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene build index: {index}");
+#endif
+                        SceneManager.sceneLoaded += OnNewSceneLoaded;
+                        loadOperation = SceneManager.LoadSceneAsync(index);
+                    }
+                }
+
+                if (loadOperation != null)
+                {
+                    while (!loadOperation.isDone)
+                    {
+                        yield return YieldInstructions.GetWaitForSecondsRealtime(64);
+                    }
+
+                    loadOperation.allowSceneActivation = true;
                 }
             }
             else
             {
-                if (int.TryParse(transitorySavegame?.Root?.Element("map")?.FirstAttribute.Value, out int index))
-                {
 #if UNITY_EDITOR
-                    Debug.Log($"{nameof(XmlSavegameManager)}: Load savegame by scene build index: {index}");
+                Debug.LogError($"{nameof(XmlSavegameManager)}: Failed to load savegame {filePath}");
 #endif
-                    SceneManager.sceneLoaded += OnNewSceneLoaded;
-                    SceneManager.LoadScene(index);
-                }
             }
         }
+
 
         /// <summary>
         /// When a new map is loaded, this method is called on the old <see cref="XmlSavegameManager"/> and will
