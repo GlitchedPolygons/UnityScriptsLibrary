@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GlitchedPolygons.SavegameFramework;
+using GlitchedPolygons.Utilities;
+using UnityEngine.SceneManagement;
 
 namespace GlitchedPolygons.Courier
 {
@@ -12,7 +15,7 @@ namespace GlitchedPolygons.Courier
     /// and then spawning/loading those in the new map.<para> </para>
     /// 
     /// You could either manually add the <see cref="SpawnedPrefab"/>s that you want to carry over via the <see cref="Add"/> method,
-    /// or you could also use a <see cref="TriggerVolumes.TriggerVolume"/> and do it from there on trigger enter
+    /// or you could also use a <see cref="TriggerVolumes.TriggerVolume"/> and do it from there OnTriggerEnter
     /// (most likely when you're transitioning maps when reaching a specific location in the world).<para> </para>
     ///
     /// Make sure that there is exactly one (and only one!) <see cref="Courier"/> in every scene!<para> </para>
@@ -34,8 +37,31 @@ namespace GlitchedPolygons.Courier
     /// </remarks>
     public class Courier : MonoBehaviour
     {
+        /// <summary>
+        /// Raised when the player initiated a load procedure
+        /// (started but not yet done; use this to show some UI label like a spinning disc or something to notify the user that loading is in progress).
+        /// </summary>
+        public event Action Loading;
+
         [SerializeField]
         private List<SpawnedPrefab> spawnedPrefabs = new(16);
+
+        private Coroutine sceneLoadingCoroutine = null;
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            Debug.Log(sceneLoadingCoroutine != null ? $"I'm from the previous map! Name: {gameObject.name}" : "I'm from the new map :D");
+        }
 
         /// <summary>
         /// Tells the <see cref="Courier"/> to carry <paramref name="spawnedPrefab"/> over to the next map it loads.
@@ -43,18 +69,82 @@ namespace GlitchedPolygons.Courier
         /// <param name="spawnedPrefab"></param>
         public void Add(SpawnedPrefab spawnedPrefab)
         {
+            if (spawnedPrefabs.Contains(spawnedPrefab))
+            {
+                return;
+            }
+            
+            spawnedPrefabs.Add(spawnedPrefab);
         }
 
         public void Remove(SpawnedPrefab spawnedPrefab)
         {
+            if (spawnedPrefabs.Contains(spawnedPrefab))
+            {
+                return;
+            }
+
+            spawnedPrefabs.Remove(spawnedPrefab);
         }
 
-        public void LoadSceneByIndex(int index)
+        /// <summary>
+        /// Clears out the <see cref="Courier"/>'s list of <see cref="SpawnedPrefab"/>s, starting fresh.
+        /// </summary>
+        public void Clear()
         {
+            spawnedPrefabs.Clear();
         }
 
-        public void LoadSceneByName(string index)
+        private void LoadScenePrep()
         {
+            Loading?.Invoke();
+            
+            DontDestroyOnLoad(gameObject);
+            
+            foreach (SpawnedPrefab spawnedPrefab in spawnedPrefabs)
+            {
+                if (spawnedPrefab == null)
+                {
+                    continue;
+                }
+                DontDestroyOnLoad(spawnedPrefab.gameObject);
+            }   
+        }
+
+        public void LoadSceneByIndex(int sceneIndex)
+        {
+            if (sceneLoadingCoroutine != null)
+            {
+                return;
+            }
+
+            LoadScenePrep();
+            
+            AsyncOperation sceneLoadingOperation = SceneManager.LoadSceneAsync(sceneIndex);
+            sceneLoadingCoroutine = StartCoroutine(LoadSceneCoroutine(sceneLoadingOperation));
+        }
+
+        public void LoadSceneByName(string sceneName)
+        {
+            if (sceneLoadingCoroutine != null)
+            {
+                return;
+            }
+
+            LoadScenePrep();
+            
+            AsyncOperation sceneLoadingOperation = SceneManager.LoadSceneAsync(sceneName);
+            sceneLoadingCoroutine = StartCoroutine(LoadSceneCoroutine(sceneLoadingOperation));
+        }
+
+        private IEnumerator LoadSceneCoroutine(AsyncOperation loadOperation)
+        {
+            while (!loadOperation.isDone)
+            {
+                yield return YieldInstructions.GetWaitForSecondsRealtime(64);
+            }
+
+            loadOperation.allowSceneActivation = true;
         }
     }
 }
