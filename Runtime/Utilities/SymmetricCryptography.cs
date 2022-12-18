@@ -57,7 +57,7 @@ namespace GlitchedPolygons.Utilities
                 {
                     // Assign AES key & IV.
                     aes.Key = rfc.GetBytes(32);
-                    
+
                     for (int i = IV.Length - 1; i >= 0; i--)
                     {
                         IV[i] = saltBytes[i];
@@ -87,7 +87,9 @@ namespace GlitchedPolygons.Utilities
 
         /// <summary>
         /// Decrypts an encrypted <c>byte[]</c> array using the specified key, salt and rfc iterations.<para> </para>
+        ///
         /// Note: the decryption can only succeed if you use the EXACT same key, salt and amount of rfc iterations; so make sure to NEVER lose those values!<para> </para>
+        ///
         /// If the decryption fails, the original input data is returned unmodified.
         /// </summary>
         /// <param name="data">The encrypted data.</param>

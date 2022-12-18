@@ -10,6 +10,7 @@ namespace GlitchedPolygons.Utilities
     {
         /// <summary>
         /// This returns the raw pixels byte array of a screenshot taken from a specific <a href="https://docs.unity3d.com/ScriptReference/Camera.html">Camera</a>.<para> </para>
+        ///
         /// You can then use the <c>Texture2D.Load(byte[] image)</c> extension method to load the byte array into a usable texture image.
         /// </summary>
         /// <param name="screenshotCamera">The camera through which the screenshot shall be taken.</param>

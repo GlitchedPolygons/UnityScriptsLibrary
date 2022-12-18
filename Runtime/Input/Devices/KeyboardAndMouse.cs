@@ -7,6 +7,7 @@ namespace GlitchedPolygons.Input
 
     /// <summary>
     /// Good old keyboard and mouse.<para> </para>
+    ///
     /// This <see cref="InputDevice"/> you will see primarily on standalone PC, Mac &amp; Linux.
     /// </summary>
     public class KeyboardAndMouse : InputDevice
@@ -22,8 +23,10 @@ namespace GlitchedPolygons.Input
 
         /// <summary>
         /// Keyboard and mouse combo axis.<para> </para>
+        ///
         /// If the Unity axis string is null or empty,
         /// the positive and negative keys will be used.<para> </para>
+        ///
         /// Otherwise <c>Input.GetAxis(string)</c> will be used.
         /// </summary>
         [Serializable]
@@ -38,6 +41,7 @@ namespace GlitchedPolygons.Input
 
         /// <inheritdoc/>
         public override event Action<int> ButtonPressed;
+
         /// <inheritdoc/>
         public override event Action<int> ButtonReleased;
 
@@ -47,10 +51,10 @@ namespace GlitchedPolygons.Input
         [SerializeField]
         private Axis[] axes =
         {
-            new Axis {negativeKey = KeyCode.A, positiveKey = KeyCode.D, valueShiftSpeed = 6.0f},
-            new Axis {negativeKey = KeyCode.S, positiveKey = KeyCode.W, valueShiftSpeed = 6.0f},
-            new Axis {unityAxis = "Mouse X", negativeKey = KeyCode.None, positiveKey = KeyCode.None, valueShiftSpeed = -1.0f},
-            new Axis {unityAxis = "Mouse Y", negativeKey = KeyCode.None, positiveKey = KeyCode.None, valueShiftSpeed = -1.0f},
+            new Axis { negativeKey = KeyCode.A, positiveKey = KeyCode.D, valueShiftSpeed = 6.0f },
+            new Axis { negativeKey = KeyCode.S, positiveKey = KeyCode.W, valueShiftSpeed = 6.0f },
+            new Axis { unityAxis = "Mouse X", negativeKey = KeyCode.None, positiveKey = KeyCode.None, valueShiftSpeed = -1.0f },
+            new Axis { unityAxis = "Mouse Y", negativeKey = KeyCode.None, positiveKey = KeyCode.None, valueShiftSpeed = -1.0f },
         };
 
         /// <summary>
@@ -59,9 +63,9 @@ namespace GlitchedPolygons.Input
         [SerializeField]
         private Button[] buttons =
         {
-            new Button {keyCodes = new[] {KeyCode.Space}},
-            new Button {keyCodes = new[] {KeyCode.C, KeyCode.LeftCommand, KeyCode.LeftControl}},
-            new Button {keyCodes = new[] {KeyCode.LeftShift, KeyCode.RightShift}},
+            new Button { keyCodes = new[] { KeyCode.Space } },
+            new Button { keyCodes = new[] { KeyCode.C, KeyCode.LeftCommand, KeyCode.LeftControl } },
+            new Button { keyCodes = new[] { KeyCode.LeftShift, KeyCode.RightShift } },
         };
 
 #if UNITY_EDITOR
@@ -190,6 +194,7 @@ namespace GlitchedPolygons.Input
                 {
                     axis.value = Input.GetAxis(axis.unityAxis);
                 }
+
                 axis.value = Mathf.Clamp(axis.value, -1.0f, 1.0f);
                 axes[i] = axis;
             }
@@ -265,6 +270,7 @@ namespace GlitchedPolygons.Input
 
         /// <summary>
         /// Gets the numeric index of a mouse button's <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>.<para> </para>
+        ///
         /// E.g. <see cref="KeyCode.Mouse0"/> = 0, <see cref="KeyCode.Mouse1"/> = 1, etc...
         /// </summary>
         /// <param name="keyCode">The mouse button's <a href="https://docs.unity3d.com/ScriptReference/KeyCode.html">KeyCode</a>.</param>

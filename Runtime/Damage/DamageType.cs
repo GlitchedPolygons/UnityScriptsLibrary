@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Various types of damage that can be applied.<para> </para>
+    ///
     /// <see cref="DamageType.Silent"/> can be used for saving/loading the game
     /// (it's supposed to modify an object's health without any special effects, sounds or anything).
     /// </summary>

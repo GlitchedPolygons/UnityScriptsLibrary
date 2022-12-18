@@ -15,8 +15,11 @@ namespace GlitchedPolygons.SavegameFramework.Json
 {
     /// <summary>
     /// The <see cref="JsonSavegameManager"/> is a component that should exist only exactly once in every scene.<para> </para>
+    ///
     /// It provides functionality for saving/loading the game's state.<para> </para>
+    ///
     /// The savegame's file format is JSON, which can be compressed and/or encrypted.<para> </para>
+    ///
     /// Check out the <see cref="SavegameManager"/>'s base class documentation for more information.
     /// </summary>
     /// <seealso cref="SavegameManager"/>
@@ -53,6 +56,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
 
         /// <summary>
         /// This is the temporary <see cref="JsonSavegame"/> that survives the map transition when loading a savegame.<para> </para>
+        ///
         /// </summary>
         private JsonSavegame transitorySavegame = null;
 
@@ -157,7 +161,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     if (component != null)
                     {
                         component.BeforeSaving();
-                        
+
                         spawnedPrefabTuple.json = JsonUtility.ToJson(component);
                     }
 
@@ -329,7 +333,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
             if (task.IsCompletedSuccessfully && transitorySavegame is not null)
             {
                 AsyncOperation loadOperation = null;
-                
+
                 if (loadByName)
                 {
                     string sceneName = transitorySavegame.mapName;
@@ -348,7 +352,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     SceneManager.sceneLoaded += OnNewSceneLoaded;
                     loadOperation = SceneManager.LoadSceneAsync(transitorySavegame.mapIndex);
                 }
-                
+
                 if (loadOperation != null)
                 {
                     while (!loadOperation.isDone)
@@ -370,6 +374,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
         /// <summary>
         /// When a new map is loaded, this method is called on the old <see cref="JsonSavegameManager"/> and will
         /// pass its <see cref="JsonSavegame"/> to the newly loaded map's <see cref="JsonSavegameManager"/>.<para> </para>
+        ///
         /// This way the new <see cref="JsonSavegameManager"/> is aware of the data it has to reconstruct. Once that's done,
         /// the <see cref="Reconstruct"/> method is called on the new manager.
         /// </summary>
@@ -409,6 +414,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
 
         /// <summary>
         /// This method loads the <see cref="JsonSavegameManager.transitorySavegame"/> variable that survived the map transition.<para> </para>
+        ///
         /// It's the method that actually applies the reconstruction to the various <see cref="SaveableComponent"/>s in the newly loaded scene (and spawns any objects that were runtime-created on save).
         /// </summary>
         private void Reconstruct()

@@ -52,6 +52,7 @@ namespace GlitchedPolygons.ExtensionMethods
 
         /// <summary>
         /// Checks whether a given <c>string</c> only contains ASCII characters or not.<para> </para>
+        ///
         /// <c>null</c> or empty <c>string</c>s return <c>true</c>!.
         /// </summary>
         /// <param name="str">The string to check.</param>
@@ -175,10 +176,10 @@ namespace GlitchedPolygons.ExtensionMethods
             {
                 stringBuilder.Append(hash[i].ToString(f));
             }
-            
+
             return stringBuilder.ToString();
         }
-        
+
         /// <summary>
         /// Converts a base64-encoded <see cref="String"/> to bytes, appending '=' padding characters to it if needed.
         /// </summary>

@@ -8,6 +8,7 @@ namespace GlitchedPolygons.TriggerVolumes
 {
     /// <summary>
     /// Represents a trigger volume that fires various events when something has entered/escaped its <a href="https://docs.unity3d.com/ScriptReference/BoxCollider.html">UnityEngine.BoxCollider</a> volume.<para> </para>
+    ///
     /// You can decide what happens when specific objects enter this trigger volume by hooking up the events inside the <see cref="TriggerVolume"/>'s inspector.
     /// </summary>
     [ExecuteInEditMode]
@@ -39,6 +40,7 @@ namespace GlitchedPolygons.TriggerVolumes
 
         /// <summary>
         /// You can specify a list of tags of which each intruder has to have at least one in order to pass the filter.<para> </para>
+        ///
         /// An empty array disables the tag filter (meaning that any tag is ok).
         /// </summary>
         [SerializeField]
@@ -75,12 +77,13 @@ namespace GlitchedPolygons.TriggerVolumes
         public void SetFiredEventsCount(int firedEvents) => this.firedEvents = firedEvents;
 
         protected ID id;
+
         /// <summary>
         /// Gets the trigger volume's identifier.
         /// </summary>
         /// <returns>The unique ID (int).</returns>
         public int GetID() => id.GetID();
-        
+
         #region #if UNITY_EDITOR
 
 #if UNITY_EDITOR
@@ -236,6 +239,7 @@ namespace GlitchedPolygons.TriggerVolumes
 
         /// <summary>
         /// Verifies that a <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> is a valid intruder based on the filters set up on this <see cref="TriggerVolume"/>.<para> </para>
+        ///
         /// Only valid intruders may raise the <see cref="onTriggerEnter"/> and <see cref="onTriggerExit"/> events!
         /// </summary>
         /// <param name="intruder">The <a href="https://docs.unity3d.com/ScriptReference/Collider.html">Collider</a> to check.</param>
@@ -257,6 +261,7 @@ namespace GlitchedPolygons.TriggerVolumes
                 {
                     Debug.LogWarning($"{nameof(TriggerVolume)}: The {nameof(LayerMask)} you specified in this {nameof(TriggerVolume)} is empty (equals to \"Nothing\" in the inspector)... No layer should pass the filter at all? Are you sure that this is what you want?");
                 }
+
                 return false;
             }
 

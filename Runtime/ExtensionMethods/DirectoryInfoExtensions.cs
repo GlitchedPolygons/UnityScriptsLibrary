@@ -10,6 +10,7 @@ namespace GlitchedPolygons.ExtensionMethods
         /// <summary>
         /// Deletes the specified directory recursively,
         /// including all of its sub-directories and files.<para> </para>
+        ///
         /// Careful with this, ffs!
         /// </summary>
         /// <param name="dir">The directory to delete.</param>

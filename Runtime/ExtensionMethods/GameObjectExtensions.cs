@@ -10,7 +10,7 @@ namespace GlitchedPolygons.ExtensionMethods
         /// <summary>
         /// Disables this <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a>'s
         /// <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a> component and all child
-        /// <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s. <para> </para> 
+        /// <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s. <para> </para>
         /// </summary>
         /// <param name="gameObject">The <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a> whose child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s you want to disable.</param>
         /// <param name="includeInactiveRenderers">Should inactive child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s be considered?</param>
@@ -30,7 +30,7 @@ namespace GlitchedPolygons.ExtensionMethods
         }
 
         /// <summary>
-        /// Enables this <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a>'s <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a> component and all child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s. <para> </para> 
+        /// Enables this <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a>'s <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a> component and all child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s. <para> </para>
         /// </summary>
         /// <param name="gameObject">The <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">GameObject</a> whose child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s you want to enable.</param>
         /// <param name="includeInactiveRenderers">Should inactive child <a href="https://docs.unity3d.com/Documentation/ScriptReference/Renderer.html">Renderer</a>s be considered?</param>

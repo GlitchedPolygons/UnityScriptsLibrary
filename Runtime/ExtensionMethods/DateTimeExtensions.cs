@@ -17,7 +17,7 @@ namespace GlitchedPolygons.ExtensionMethods
         {
             return dateTime.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz", DateTimeFormatInfo.InvariantInfo);
         }
-        
+
         /// <summary>
         /// Checks whether the given <see cref="DateTime"/> is almost equal to another <see cref="DateTime"/> object.
         /// </summary>
@@ -33,6 +33,7 @@ namespace GlitchedPolygons.ExtensionMethods
 
         /// <summary>
         /// Converts a <see cref="DateTime"/> to Unix time (seconds since 1970-01-01T00:00:00Z).<para> </para>
+        ///
         /// Make sure that the <see cref="DateTime"/> you're converting is in UTC!
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert.</param>
@@ -44,6 +45,7 @@ namespace GlitchedPolygons.ExtensionMethods
 
         /// <summary>
         /// Converts a <see cref="DateTime"/> to Unix time (milliseconds since 1970-01-01T00:00:00Z).<para> </para>
+        ///
         /// Make sure that the <see cref="DateTime"/> you're converting is UTC!
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert.</param>

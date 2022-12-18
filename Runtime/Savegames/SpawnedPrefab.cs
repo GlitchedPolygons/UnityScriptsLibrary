@@ -5,12 +5,14 @@ using UnityEngine.Serialization;
 namespace GlitchedPolygons.SavegameFramework
 {
     /// <summary>
-    /// This component should be on all saveable prefab objects (at root level) that
+    /// This component should be on all saveable prefab objects (at root level, NOT on a nested child <c>GameObject</c>!) that
     /// weren't in the scene at edit-time (ergo spawned at runtime, like grenades, dropped items, etc...).<para> </para>
+    ///
     /// It can have a linked <see cref="SaveableComponent"/> to store/reconstruct the important data
-    /// (use <see cref="SpawnedPrefab.GetSaveableComponent"/>
-    /// to access it).<para> </para>
+    /// (use <see cref="SpawnedPrefab.GetSaveableComponent"/> to access it).<para> </para>
+    ///
     /// Make sure it doesn't appear in the scene at edit-time but only and EXCLUSIVELY AT RUNTIME (via instantiation!).<para> </para>
+    ///
     /// The <see cref="SpawnedPrefab.resourcePath"/> is the local <a href="https://docs.unity3d.com/ScriptReference/Resources.html">Resources</a> path used to reconstruct (instantiate) this prefab object on load.
     /// </summary>
     [ExecuteInEditMode]
@@ -20,7 +22,7 @@ namespace GlitchedPolygons.SavegameFramework
         /// List of prefabs spawned at runtime that shall persist between game sessions.
         /// </summary>
         public static readonly List<SpawnedPrefab> SPAWNED_PREFABS = new(256);
-        
+
         /// <summary>
         /// The <see cref="Resources"/> path used to reconstruct the prefab on load.
         /// </summary>
@@ -35,6 +37,7 @@ namespace GlitchedPolygons.SavegameFramework
 
         /// <summary>
         /// The linked <see cref="SaveableComponent"/>.<para> </para>
+        ///
         /// This is optional, but nice to have if you want to not only respawn your saved prefabs on load but also restore any data on them.
         /// </summary>
         [SerializeField]

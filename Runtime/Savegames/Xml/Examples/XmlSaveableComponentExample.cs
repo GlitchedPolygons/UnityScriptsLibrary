@@ -24,7 +24,9 @@ namespace GlitchedPolygons.SavegameFramework.Xml.Examples
 
         /// <summary>
         /// Cache the entire root XElement to return from the <see cref="GetXml"/> method.<para> </para>
+        ///
         /// If you do this on all <see cref="XmlSaveableComponent"/>s, this will tremendously decrease the GC Alloc when saving the game.<para> </para>
+        ///
         /// Also: use the <c>nameof()</c> operator instead of magic strings to avoid any catastrophes when renaming one or more variables in your code.
         /// </summary>
         private readonly XElement XELEMENT = new("test",

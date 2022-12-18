@@ -5,18 +5,21 @@ namespace GlitchedPolygons.Input
 {
     /// <summary>
     /// A centralized input manager that gathers input from multiple <see cref="InputDevice"/>s and mixes their button events and axes together.<para> </para>
+    ///
     /// Useful if you want to accept input from e.g. an <see cref="XboxController"/> and <see cref="KeyboardAndMouse"/> combo simultaneously.
     /// </summary>
     public sealed class InputMixer : MonoBehaviour
     {
         /// <summary>
         /// This event is raised in the frame where the player presses a button.<para> </para>
+        ///
         /// Which button was pressed is passed as int argument.
         /// </summary>
         public event Action<int> ButtonPressed;
 
         /// <summary>
         /// This event is invoked the frame when the user lets go of a button.<para> </para>
+        ///
         /// Which button was released is passed as int argument.
         /// </summary>
         public event Action<int> ButtonReleased;
@@ -53,6 +56,7 @@ namespace GlitchedPolygons.Input
             {
                 axis += inputDevices[i].GetAxis(axisIndex);
             }
+
             return axis;
         }
 

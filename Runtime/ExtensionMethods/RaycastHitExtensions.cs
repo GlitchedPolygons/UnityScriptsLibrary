@@ -14,6 +14,7 @@ namespace GlitchedPolygons.ExtensionMethods
 
         /// <summary>
         /// Sort this <a href="https://docs.unity3d.com/ScriptReference/RaycastHit.html">RaycastHit</a>[] array by <a href="https://docs.unity3d.com/ScriptReference/RaycastHit-distance.html">RaycastHit.distance</a>.<para> </para>
+        ///
         /// Also supports arrays from the <a href="https://docs.unity3d.com/ScriptReference/Physics.RaycastNonAlloc.html">Physics.RaycastNonAlloc</a> methods (the ones with some empty <a href="https://docs.unity3d.com/ScriptReference/RaycastHit.html">RaycastHit</a> variables in them).
         /// </summary>
         /// <param name="hits">The <a href="https://docs.unity3d.com/ScriptReference/RaycastHit.html">RaycastHit</a>s array to sort.</param>

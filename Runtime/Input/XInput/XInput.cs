@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.Events;
-
 using XInputDotNetPure;
 
 namespace GlitchedPolygons.Input
 {
-
     /// <summary>
     /// XInputDotNet wrapper behaviour for singleplayer-oriented xbox controller input sampling.<para> </para>
+    ///
     /// Bind your desired actions to the various button events in here.
     /// </summary>
     public sealed class XInput : MonoBehaviour
@@ -40,12 +38,14 @@ namespace GlitchedPolygons.Input
 
         /// <summary>
         /// This event is raised when the currently active xbox controller detects a button press.<para> </para>
+        ///
         /// The pressed <see cref="XboxControllerButton"/> is passed as a function parameter.
         /// </summary>
         public event Action<XboxControllerButton> ButtonPressed = null;
 
         /// <summary>
         /// This event is raised when any <see cref="XboxControllerButton"/> was released (after being held down) from the currently active xbox controller.<para> </para>
+        ///
         /// The released <see cref="XboxControllerButton"/> is passed as a function parameter.
         /// </summary>
         public event Action<XboxControllerButton> ButtonReleased = null;
@@ -58,6 +58,7 @@ namespace GlitchedPolygons.Input
         /// Horizontal axis value of the left joystick. [-1; 1]
         /// </summary>
         public float LeftThumbStickX { get; private set; }
+
         /// <summary>
         /// Vertical axis value of the left joystick. [-1; 1]
         /// </summary>
@@ -67,6 +68,7 @@ namespace GlitchedPolygons.Input
         /// Horizontal axis value of the right joystick. [-1; 1]
         /// </summary>
         public float RightThumbStickX { get; private set; }
+
         /// <summary>
         /// Vertical axis value of the right joystick. [-1; 1]
         /// </summary>
@@ -76,6 +78,7 @@ namespace GlitchedPolygons.Input
         /// The left trigger's axis [0; 1]
         /// </summary>
         public float LT { get; private set; }
+
         /// <summary>
         /// The right trigger's axis [0; 1]
         /// </summary>
@@ -131,6 +134,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.A);
                 }
+
                 if (previousState.Buttons.A == ButtonState.Pressed && currentState.Buttons.A == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.A);
@@ -141,6 +145,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.B);
                 }
+
                 if (previousState.Buttons.B == ButtonState.Pressed && currentState.Buttons.B == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.B);
@@ -151,6 +156,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.X);
                 }
+
                 if (previousState.Buttons.X == ButtonState.Pressed && currentState.Buttons.X == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.X);
@@ -161,6 +167,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.Y);
                 }
+
                 if (previousState.Buttons.Y == ButtonState.Pressed && currentState.Buttons.Y == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.Y);
@@ -175,6 +182,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.LB);
                 }
+
                 if (previousState.Buttons.LeftShoulder == ButtonState.Pressed && currentState.Buttons.LeftShoulder == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.LB);
@@ -185,6 +193,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.RB);
                 }
+
                 if (previousState.Buttons.RightShoulder == ButtonState.Pressed && currentState.Buttons.RightShoulder == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.RB);
@@ -203,6 +212,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.LT);
                 }
+
                 // LT RELEASED
                 if (previousState.Triggers.Left > .5f && currentState.Triggers.Left < .5f)
                 {
@@ -214,6 +224,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.RT);
                 }
+
                 // RT RELEASED
                 if (previousState.Triggers.Right > .5f && currentState.Triggers.Right < .5f)
                 {
@@ -229,6 +240,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.Start);
                 }
+
                 if (previousState.Buttons.Start == ButtonState.Pressed && currentState.Buttons.Start == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.Start);
@@ -239,6 +251,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.Back);
                 }
+
                 if (previousState.Buttons.Back == ButtonState.Pressed && currentState.Buttons.Back == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.Back);
@@ -253,6 +266,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.LeftThumbStick);
                 }
+
                 if (previousState.Buttons.LeftStick == ButtonState.Pressed && currentState.Buttons.LeftStick == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.LeftThumbStick);
@@ -263,6 +277,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.RightThumbStick);
                 }
+
                 if (previousState.Buttons.RightStick == ButtonState.Pressed && currentState.Buttons.RightStick == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.RightThumbStick);
@@ -277,6 +292,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.DPad_Up);
                 }
+
                 if (previousState.DPad.Up == ButtonState.Pressed && currentState.DPad.Up == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.DPad_Up);
@@ -287,6 +303,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.DPad_Right);
                 }
+
                 if (previousState.DPad.Right == ButtonState.Pressed && currentState.DPad.Right == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.DPad_Right);
@@ -297,6 +314,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.DPad_Down);
                 }
+
                 if (previousState.DPad.Down == ButtonState.Pressed && currentState.DPad.Down == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.DPad_Down);
@@ -307,6 +325,7 @@ namespace GlitchedPolygons.Input
                 {
                     ButtonPressed?.Invoke(XboxControllerButton.DPad_Left);
                 }
+
                 if (previousState.DPad.Left == ButtonState.Pressed && currentState.DPad.Left == ButtonState.Released)
                 {
                     ButtonReleased?.Invoke(XboxControllerButton.DPad_Left);

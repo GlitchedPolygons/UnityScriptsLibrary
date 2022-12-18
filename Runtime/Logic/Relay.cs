@@ -7,7 +7,9 @@ namespace GlitchedPolygons.Logic
 {
     /// <summary>
     /// Logic relay that can be fired with or without a delay.<para> </para>
+    ///
     /// When fired, a relay will invoke all of its registered actions at once.<para> </para>
+    ///
     /// You can decide what happens on fire by subscribing/unsubscribing
     /// listeners to the <see cref="Fired"/> event (via <see cref="AddListener"/> and <see cref="RemoveListener"/>) or
     /// by hooking the events up directly in the <see cref="Relay"/>'s inspector.
@@ -75,6 +77,7 @@ namespace GlitchedPolygons.Logic
                     Fired -= registeredAction;
                 }
             }
+
             registeredActions.Clear();
         }
 
@@ -89,6 +92,7 @@ namespace GlitchedPolygons.Logic
 
         /// <summary>
         /// Fires the relay, invoking all registered method calls.<para> </para>
+        ///
         /// This waits for <see cref="delay"/> seconds and then calls <see cref="OnFire"/>, thus triggering the <see cref="Fired"/> and <see cref="onFire"/> events.
         /// </summary>
         public void Fire()
@@ -119,6 +123,7 @@ namespace GlitchedPolygons.Logic
 
         /// <summary>
         /// Sets this <see cref="Relay"/>'s delay value.<para> </para>
+        ///
         /// Pending invocations (triggered with the old delay value) won't be affected by this.
         /// </summary>
         /// <param name="newDelay">The new delay value in seconds.</param>

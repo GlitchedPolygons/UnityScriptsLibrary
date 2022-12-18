@@ -27,9 +27,10 @@ namespace GlitchedPolygons.ExtensionMethods
         {
             return collection is { Count: > 0 };
         }
-        
+
         /// <summary>
         /// Checks whether the two <see cref="ICollection{T}"/> are equal (have the same elements).<para> </para>
+        ///
         /// The order of the elements is not important; e.g. {1,2,3} and {2,3,1} would return <c>true</c>.
         /// </summary>
         /// <typeparam name="T"><see cref="ICollection{T}"/> type parameter.</typeparam>
@@ -68,6 +69,7 @@ namespace GlitchedPolygons.ExtensionMethods
                     {
                         return false;
                     }
+
                     dictionary[item] = i - 1;
                 }
                 else

@@ -5,6 +5,7 @@ namespace GlitchedPolygons
 {
     /// <summary>
     /// Simple component that exposes the <c>MonoBehaviour.Start</c>, <c>MonoBehaviour.Awake</c> and <c>MonoBehaviour.OnEnable</c> messages to the inspector.<para> </para>
+    ///
     /// Useful if you want to trigger basic stuff happening in the scene on load without writing any code (just hook up stuff in the inspector <a href="https://docs.unity3d.com/ScriptReference/Events.UnityEvent.html">UnityEvent</a>).
     /// </summary>
     public class Lifetime : MonoBehaviour

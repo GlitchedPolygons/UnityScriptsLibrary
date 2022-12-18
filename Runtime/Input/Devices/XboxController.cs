@@ -8,6 +8,7 @@ namespace GlitchedPolygons.Input
 {
     /// <summary>
     /// The almighty xbox controller.<para> </para>
+    ///
     /// This is accessible from the xbox itself 
     /// or Windows exclusively (due to XInput requiring DirectX to work).
     /// </summary>
@@ -18,9 +19,10 @@ namespace GlitchedPolygons.Input
 
         /// <inheritdoc/>
         public override event Action<int> ButtonPressed;
+
         /// <inheritdoc/>
         public override event Action<int> ButtonReleased;
-        
+
         [SerializeField]
         private XboxControllerAxis[] axes =
         {
@@ -124,7 +126,7 @@ namespace GlitchedPolygons.Input
 
             return buttons[buttonIndex];
         }
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -166,7 +168,10 @@ namespace GlitchedPolygons.Input
         }
 
 #if UNITY_EDITOR_WIN
-        private void Update() { if (debugAxis >= 0 && debugAxis < axes.Length) print(GetAxis(debugAxis)); }
+        private void Update()
+        {
+            if (debugAxis >= 0 && debugAxis < axes.Length) print(GetAxis(debugAxis));
+        }
 #endif
     }
 }

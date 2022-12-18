@@ -31,6 +31,7 @@ namespace GlitchedPolygons.Utilities
 
         /// <summary>
         /// Checks if the specified amount of milliseconds has already been waited for once.<para> </para>
+        ///
         /// If that's the case, retrieve the corresponding <a href="https://docs.unity3d.com/ScriptReference/WaitForSeconds.html">WaitForSeconds</a> instance, 
         /// otherwise create a new one and cache it into the <see cref="WAIT_FOR_SECONDS"/> dictionary.
         /// </summary>
@@ -53,6 +54,7 @@ namespace GlitchedPolygons.Utilities
 
         /// <summary>
         /// Checks if the specified amount of milliseconds has already been waited for once.<para> </para>
+        ///
         /// If that's the case, retrieve the corresponding <a href="https://docs.unity3d.com/ScriptReference/WaitForSecondsRealtime.html">WaitForSecondsRealtime</a> instance, 
         /// otherwise create a new one and cache it into the <see cref="WAIT_FOR_SECONDS_REALTIME"/> dictionary.
         /// </summary>

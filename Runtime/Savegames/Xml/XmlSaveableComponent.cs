@@ -6,7 +6,9 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 {
     /// <summary>
     /// All components that you wish to be saved and loaded in some way between runtimes should inherit from <see cref="XmlSaveableComponent"/> in order to provide functionality for object persistance/reconstruction.<para> </para>
+    ///
     /// If you want to use the Awake and OnDestroy methods in <see cref="XmlSaveableComponent"/>s, please use the <c>override</c> keyword and call <c>base.Awake();</c> and/or <c>base.OnDestroy();</c>.<para> </para>
+    ///
     /// All <see cref="XmlSaveableComponent"/>s have the <c>[ExecuteInEditMode]</c> attribute; therefore if you encounter unwanted behaviour due to MonoBehaviour methods being called at edit time, consider adding: <c>if (!Application.isPlaying) return; </c>
     /// </summary>
     [ExecuteInEditMode]
@@ -36,7 +38,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                 return id.GetID();
             }
         }
-        
+
         /// <inheritdoc cref="SaveableComponent.BeforeSaving"/>
         public abstract override void BeforeSaving();
 
@@ -69,7 +71,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                     DestroyImmediate(this);
                     return;
                 }
-                
+
                 FindObjectOfType<XmlSavegameManager>()?.GatherSaveableComponentsInScene();
             }
 #endif
@@ -90,7 +92,9 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
         /// <summary>
         /// Loads an <c><see cref="XElement"/></c> (hopefully the one that was originally produced by  the <see cref="GetXml"/> method) into the class.<para> </para>
+        ///
         /// This method should reconstruct the object's state on load, and then return <c>true</c> if the procedure was successful (<c>false</c> if it failed in some way).<para> </para>
+        ///
         /// </summary>
         /// <remarks>This should NOT be used to make the <see cref="SaveableComponent"/> use the loaded data in any way: THIS IS JUST FOR LOADING DATA INTO THE CLASS FIELDS! Instead, use the <see cref="SaveableComponent.AfterLoading"/> method for applying the loaded data (e.g. setting <c>Transform</c> positions and rotations and whatnot)!</remarks>
         /// <param name="xml">The <c><see cref="XElement"/></c> that was obtained via <see cref="GetXml"/>.</param>

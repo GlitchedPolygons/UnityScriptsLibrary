@@ -17,12 +17,14 @@ namespace GlitchedPolygons.Input
         {
             [Tooltip("The game button index.")]
             public int index;
+
             [Tooltip("The associated UI button element that when clicked or tapped on will trigger the event.")]
             public Button button;
         }
 
         /// <inheritdoc/>
         public override event Action<int> ButtonPressed;
+
         /// <inheritdoc/>
         public override event Action<int> ButtonReleased;
 
@@ -97,6 +99,7 @@ namespace GlitchedPolygons.Input
 
         /// <summary>
         /// Sets an axis value directly.<para> </para>
+        ///
         /// WARNING: This is not clamped! You have to clamp the axis value manually if you want range restrictions!
         /// </summary>
         /// <param name="axisIndex">Axis to set.</param>

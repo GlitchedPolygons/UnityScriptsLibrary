@@ -12,6 +12,7 @@ namespace GlitchedPolygons.ExtensionMethods
     {
         /// <summary>
         /// The initial capacity of the internal <see cref="StringBuilder"/>.<para> </para>
+        ///
         /// Try to give a rough estimate of your output string's length here.
         /// </summary>
         public const int STRING_BUILDER_INITIAL_CAP = 64;
@@ -20,13 +21,16 @@ namespace GlitchedPolygons.ExtensionMethods
 
         /// <summary>
         /// Compares two collections and returns a score.<para> </para>
+        ///
         /// Ideally, you'd set a carefully selected threshold of equality (such as 0.75f), but NOT 100%.<para> </para>
+        ///
         /// The resulting equality score is a <c>float</c> value between [0;1] where <c>0</c> is completely different and <c>1</c> entirely identical.<para> </para>
+        ///
         /// Duplicate values are stripped from both collections before comparison.
         /// </summary>
         /// <param name="collection1">Collection 1</param>
         /// <param name="collection2">Collection 2</param>
-        /// /// <typeparam name="T"><see cref="ICollection{T}"/> type parameter.</typeparam>
+        /// <typeparam name="T"><see cref="ICollection{T}"/> type parameter.</typeparam>
         /// <returns>The resulting equality score: a value between [0;1] where 0 is completely different and 1 entirely identical.</returns>
         public static float Compare<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
@@ -52,7 +56,7 @@ namespace GlitchedPolygons.ExtensionMethods
                 if (c1 != c2) throw new SystemException();
             }
 
-            return (float) l1.Intersect(l2).Count() / c1;
+            return (float)l1.Intersect(l2).Count() / c1;
         }
 
         #endregion
@@ -71,7 +75,9 @@ namespace GlitchedPolygons.ExtensionMethods
 
         /// <summary>
         /// Converts a collection of <c>string</c>s to a single, custom-character-separated <c>string</c>.<para> </para>
+        ///
         /// Make ABSOLUTELY sure that none of the <c>string</c>s in the collection contains the <paramref name="separatorChar"/>!!<para> </para>
+        ///
         /// It would mess with the reverse method (which is <c>string.Split(<paramref name="separatorChar"/>)</c>)
         /// </summary>
         /// <param name="strings">The collection of <c>string</c>s to convert.</param>

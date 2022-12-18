@@ -5,6 +5,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
 {
     /// <summary>
     /// Data holder class for the <see cref="JsonSavegameManager"/> implementation of the <see cref="GlitchedPolygons.SavegameFramework"/>.<para> </para>
+    ///
     /// This is what is serialized out on save using Unity's <c>JsonUtility.ToJson(object)</c>.
     /// </summary>
     [Serializable]
@@ -14,17 +15,17 @@ namespace GlitchedPolygons.SavegameFramework.Json
         /// Scene build index.
         /// </summary>
         public int mapIndex = -2;
-        
+
         /// <summary>
         /// Scene name.
         /// </summary>
         public string mapName = "map_name_here";
-        
+
         /// <summary>
         /// The saved <see cref="JsonSaveableComponent"/>s.
         /// </summary>
         public List<JsonSaveableComponentTuple> components = new();
-        
+
         /// <summary>
         /// The saved <see cref="SpawnedPrefab"/>s.
         /// </summary>

@@ -10,8 +10,10 @@ using UnityEngine;
 namespace GlitchedPolygons.SavegameFramework
 {
     /// <summary>
-    /// Abstract base class for all savegame manager implementations.<para> </para> 
+    /// Abstract base class for all savegame manager implementations.<para> </para>
+    /// 
     /// There can be many, such as XML based ones, others that use JSON, or even ProtoBuf, YAML, msgpack, well... the possibilities are endless.<para> </para>
+    ///
     /// They all share the same raw and basic functionalities defined in here though.
     /// </summary>
     public abstract class SavegameManager : MonoBehaviour
@@ -60,6 +62,7 @@ namespace GlitchedPolygons.SavegameFramework
 
         /// <summary>
         /// Raised whenever the <see cref="SavegameManager"/> instance is ready again after a saving or loading procedure finished successfully.<para> </para>
+        ///
         /// Use this to e.g. reenable the UI buttons for saving/loading.
         /// </summary>
         public event Action Ready;
@@ -92,6 +95,7 @@ namespace GlitchedPolygons.SavegameFramework
 
         /// <summary>
         /// How many rounds of PBKDF2 should be applied to <see cref="key"/> in order to derive the AES key from it?<para> </para>
+        ///
         /// Once decided, DO NOT CHANGE THIS value or you'll be unable to decrypt your data unless you save the used iteration count along with the data you're decrypting!
         /// </summary>
         [SerializeField]
@@ -102,7 +106,8 @@ namespace GlitchedPolygons.SavegameFramework
         /// Collect generated garbage after saving?
         /// </summary>
         [SerializeField]
-        [Tooltip("Should an instant garbage collection be triggered after saving the game?\nThis can be of advantage in scenarios where big savegames are generated, since those allocate huge amounts of memory (unavoidable due to the way serialization works; strings are always created and needed).\nThis is particularly relevant if you follow the \"collect often, collect small chunks\" convention of keeping a small heap.\nContinuously letting Unity expand the heap WILL trigger a collection sometime during gameplay and cause a stutter; therefore, collecting frequently and maintaining that heap as small as possible can make or break your game's performance.")]
+        [Tooltip(
+            "Should an instant garbage collection be triggered after saving the game?\nThis can be of advantage in scenarios where big savegames are generated, since those allocate huge amounts of memory (unavoidable due to the way serialization works; strings are always created and needed).\nThis is particularly relevant if you follow the \"collect often, collect small chunks\" convention of keeping a small heap.\nContinuously letting Unity expand the heap WILL trigger a collection sometime during gameplay and cause a stutter; therefore, collecting frequently and maintaining that heap as small as possible can make or break your game's performance.")]
         protected bool collectGarbageOnSave = true;
 
         /// <summary>
@@ -160,9 +165,12 @@ namespace GlitchedPolygons.SavegameFramework
 
         /// <summary>
         /// Loads a savegame file from inside the <see cref="SavegameManager.savegamesDirectoryPath"/>. <para> </para>
+        ///
         /// The <paramref name="fileName"/> parameter is just the savegame's file name (local to the <see cref="SavegameManager.savegamesDirectoryPath"/> and WITHOUT THE FILE EXTENSION).<para> </para>
+        ///
         /// This will cause a chain reaction of method calls and procedures in order to make the loading procedure
         /// and map transition as smooth as possible.<para> </para>
+        ///
         /// Check out the documentation of the implementing child classes to find out more about how it works (e.g. <see cref="GlitchedPolygons.SavegameFramework.Xml.XmlSavegameManager"/>).
         /// </summary>
         /// <param name="fileName">The savegame's file name (WITHOUT ITS EXTENSION!). Path is local to the <see cref="SavegameManager.savegamesDirectoryPath"/>.</param>
@@ -177,7 +185,7 @@ namespace GlitchedPolygons.SavegameFramework
         {
             Load(GetNewestSavegame());
         }
-        
+
         /// <summary>
         /// This is the full path to the directory that contains the savegames.
         /// </summary>

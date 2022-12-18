@@ -15,10 +15,12 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 {
     /// <summary>
     /// The <see cref="XmlSavegameManager"/> is a component that should only ever exist once per scene.<para> </para>
+    ///
     /// It provides functionality for saving/loading the game's state.<para> </para>
+    ///
     /// The savegame's file format is xml that can be optionally compressed and/or encrypted.
-    /// <remarks>When working in the editor with domain reloading disabled, you MUST ensure that the script execution order handles <see cref="XmlSavegameManager"/> BEFORE <see cref="SpawnedPrefab"/>!</remarks>
     /// </summary>
+    /// <remarks>When working in the editor with domain reloading disabled, you MUST ensure that the script execution order handles <see cref="XmlSavegameManager"/> BEFORE <see cref="SpawnedPrefab"/>!</remarks>
     [ExecuteInEditMode]
     public sealed class XmlSavegameManager : SavegameManager
     {
@@ -38,13 +40,15 @@ namespace GlitchedPolygons.SavegameFramework.Xml
         #endregion
 
         #region Inspector variables
-        
+
         /// <summary>
         /// Should the generated xml be nicely formatted and indented with whitespaces and line breaks?<para> </para>
+        ///
         /// This only makes sense if you're not encrypting and not compressing the savegame, since it's a feature intended to enhance human readability of the xml (which falls away when encrypting/compressing).
         /// </summary>
         [SerializeField]
-        [Header("This is the XmlSavegameManager component.\nThere should be exactly one in every scene.\n\nThis component provides methods for saving and loading savegames.\n\nIf you encrypt and/or compress the savegames, make ABSOLUTELY sure that the \"key\", \"encrypt\", \"compress\" and \"iterationsOfPBKDF2\" settings match up in EVERY XmlSavegameManager instance throughout the entire game, otherwise you might not be able to load one or more savegames at some point.\n\nMake sure that the key field is at least 32 characters long.\n\nSaving will result in a savegame file placed inside the savegames directory path (by default \"Applications.persistentDataPath/Savegames\"). Check out the (well documented) source code for more information.\n\nLoading a savegame will cause a chain reaction of events:\n\n1.\nReading savegame file (eventually decompress/decrypt).\n\n2.\nPassing it to a transitory savegame variable that survives the map transition.\n\n3.\nDetermining which scene to load, trigger the map transition and pass the transitory savegame variable to the new scene's XmlSavegameManager component.\n\n4.\nActually load the savegame's data into the scene; spawn any saved prefabs that weren't there at edit-time.\n\n5.\nErase traces.\n\nYou can gather all the SaveableComponents in the scene at edit-time automatically: there is a component context menu entry that does that.\n\nNote that only max. 1 SaveableComponent should ever be in a GameObject's hierarchy (e.g. a saveable Prop.cs component shouldn't have any child GameObjects with other SaveableComponents under it!).\nIdeally you would have one SaveableComponent at the root GameObject of your prefabs.\n")]
+        [Header(
+            "This is the XmlSavegameManager component.\nThere should be exactly one in every scene.\n\nThis component provides methods for saving and loading savegames.\n\nIf you encrypt and/or compress the savegames, make ABSOLUTELY sure that the \"key\", \"encrypt\", \"compress\" and \"iterationsOfPBKDF2\" settings match up in EVERY XmlSavegameManager instance throughout the entire game, otherwise you might not be able to load one or more savegames at some point.\n\nMake sure that the key field is at least 32 characters long.\n\nSaving will result in a savegame file placed inside the savegames directory path (by default \"Applications.persistentDataPath/Savegames\"). Check out the (well documented) source code for more information.\n\nLoading a savegame will cause a chain reaction of events:\n\n1.\nReading savegame file (eventually decompress/decrypt).\n\n2.\nPassing it to a transitory savegame variable that survives the map transition.\n\n3.\nDetermining which scene to load, trigger the map transition and pass the transitory savegame variable to the new scene's XmlSavegameManager component.\n\n4.\nActually load the savegame's data into the scene; spawn any saved prefabs that weren't there at edit-time.\n\n5.\nErase traces.\n\nYou can gather all the SaveableComponents in the scene at edit-time automatically: there is a component context menu entry that does that.\n\nNote that only max. 1 SaveableComponent should ever be in a GameObject's hierarchy (e.g. a saveable Prop.cs component shouldn't have any child GameObjects with other SaveableComponents under it!).\nIdeally you would have one SaveableComponent at the root GameObject of your prefabs.\n")]
         private bool indent = false;
 
         /// <summary>
@@ -94,6 +98,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
         /// <summary>
         /// This is the temporary <see cref="XDocument"/> that survives the map transition when loading a savegame.<para> </para>
+        ///
         /// </summary>
         private XDocument transitorySavegame = null;
 
@@ -156,7 +161,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                     {
                         continue;
                     }
-                    
+
                     component.BeforeSaving();
 
                     saveableComponentsXmlBuffer.Add((component.ID, component.GetXml()));
@@ -193,16 +198,16 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                     }
 
                     XElement xml = null;
-                    
+
                     XmlSaveableComponent component = prefab.GetSaveableComponent() as XmlSaveableComponent;
 
                     if (component != null)
                     {
                         component.BeforeSaving();
-                        
+
                         xml = component.GetXml();
                     }
-                    
+
                     spawnedPrefabsXmlBuffer.Add((prefab.GetResourcePath(), xml));
 
                     if (i % batchSize == 0)
@@ -307,12 +312,17 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
         /// <summary>
         /// Loads a savegame file from inside the <see cref="SavegameManager.savegamesDirectoryPath"/>. <para> </para>
+        ///
         /// The <paramref name="fileName"/> parameter is just the savegame's file name (local to the <see cref="SavegameManager.savegamesDirectoryPath"/> and WITHOUT THE FILE EXTENSION).<para> </para>
+        ///
         /// This will cause a chain reaction of method calls and procedures in order to make the loading procedure
         /// and map transition as smooth as possible.<para> </para>
+        ///
         /// The method registers <see cref="XmlSavegameManager.OnNewSceneLoaded(Scene, LoadSceneMode)"/>
         /// to the <see cref="SceneManager.sceneLoaded"/> event and then loads the savegame's stored scene. A scene transition is triggered.<para> </para>
+        ///
         /// What happens next is that the <see cref="OnNewSceneLoaded(Scene, LoadSceneMode)"/> method is fired in the NEW scene on the OLD <see cref="XmlSavegameManager"/> instance.<para> </para>
+        ///
         /// That method then passes its <see cref="XmlSavegameManager.transitorySavegame"/> document over to the new scene's <see cref="XmlSavegameManager"/>, and calls <see cref="Reconstruct"/> on it. The old scene's <see cref="XmlSavegameManager"/> can now die safely. 
         /// </summary>
         /// <param name="fileName">The savegame's file name (WITHOUT ITS EXTENSION!). Path is local to the <see cref="SavegameManager.savegamesDirectoryPath"/>.</param>
@@ -455,6 +465,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
         /// <summary>
         /// When a new map is loaded, this method is called on the old <see cref="XmlSavegameManager"/> and will
         /// pass its savegame <see cref="XDocument"/> to the newly loaded map's <see cref="XmlSavegameManager"/>.<para> </para>
+        ///
         /// This way the new <see cref="XmlSavegameManager"/> is aware of the data it has to reconstruct. Once that's done,
         /// the <see cref="Reconstruct"/> method is called on the new manager.
         /// </summary>
@@ -499,6 +510,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
         /// <summary>
         /// This method loads the <see cref="XmlSavegameManager.transitorySavegame"/> variable that survived the map transition.<para> </para>
+        ///
         /// It's the method that actually applies the reconstruction to the various <see cref="SaveableComponent"/>s in the newly loaded scene (and spawns any objects that were runtime-created on save).
         /// </summary>
         private void Reconstruct()
@@ -562,7 +574,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                         if (components.TryGetValue(component.ID, out XElement xml))
                         {
                             component.LoadXml(xml);
-                            
+
                             component.AfterLoading();
                         }
                         else
@@ -595,7 +607,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                                 if (component != null)
                                 {
                                     component.LoadXml(prefab.Element("component"));
-                                    
+
                                     component.AfterLoading();
                                 }
                             }

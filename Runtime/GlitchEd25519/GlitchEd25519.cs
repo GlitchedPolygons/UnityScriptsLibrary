@@ -6,6 +6,7 @@ namespace GlitchedPolygons.GlitchEd25519
     /// <summary>
     /// C# translation of the <a href="https://github.com/GlitchedPolygons/GlitchEd25519">GlitchEd25519</a>
     /// fork of the <a href="https://github.com/orlp/ed25519">orlp/ed25519</a> C library.<para> </para>
+    ///
     /// Exposes functions for generating Ed25519 key-pairs, performing key exchange operations on them, as well as signing and verifying messages.
     /// </summary>
     public static partial class GlitchEd25519
@@ -120,7 +121,9 @@ namespace GlitchedPolygons.GlitchEd25519
 
         /// <summary>
         /// Performs a key exchange on the given public key and private key, producing a shared secret.<para> </para>
+        ///
         /// It is recommended to hash the shared secret before using it.<para> </para>
+        ///
         /// <paramref name="outSharedSecret"/> must be a 32 byte writable buffer where the shared secret will be stored.
         /// </summary>
         /// <param name="outSharedSecret">32B writable output buffer where to store the shared secret.</param>
@@ -209,7 +212,9 @@ namespace GlitchedPolygons.GlitchEd25519
 
         /// <summary>
         /// Performs a key exchange on the given public key and private key in Ref10 format, producing a shared secret.<para> </para>
+        ///
         /// It is recommended to hash the shared secret before using it.<para> </para>
+        ///
         /// <paramref name="outSharedSecret"/> must be a 32 byte writable buffer where the shared secret will be stored.
         /// </summary>
         /// <param name="outSharedSecret">32B writable output buffer where to store the shared secret.</param>
@@ -228,8 +233,11 @@ namespace GlitchedPolygons.GlitchEd25519
 
         /// <summary>
         /// Adds scalar to the given key pair where scalar is a 32 byte buffer (possibly generated with ed25519_create_seed), generating a new key pair.<para> </para>
+        ///
         /// You can calculate the public key sum without knowing the private key and vice versa by passing in NULL for the key you don't know.<para> </para>
+        ///
         /// This is useful for enforcing randomness on a key pair by a third party while only knowing the public key, among other things.<para> </para>
+        ///
         /// Warning: the last bit of the scalar is ignored - if comparing scalars, make sure to clear it with <c>scalar[31] &amp;= 127</c>.
         /// </summary>
         /// <seealso href="http://crypto.stackexchange.com/a/6215/4697"/>
@@ -458,6 +466,7 @@ namespace GlitchedPolygons.GlitchEd25519
 
         /// <summary>
         /// Verifies the <paramref name="signature"/> on the given <paramref name="message"/> using the provided <paramref name="publicKey"/>.<para> </para>
+        ///
         /// <paramref name="signature"/> must be a readable 64B buffer. 
         /// </summary>
         /// <param name="signature">Readable 64B buffer containing the signature to verify.</param>
