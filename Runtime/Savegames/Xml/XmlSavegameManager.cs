@@ -113,7 +113,8 @@ namespace GlitchedPolygons.SavegameFramework.Xml
         /// Saves the game out to a time-stamped savegame file inside the <see cref="SavegameManager.savegamesDirectoryPath"/> folder.
         /// </summary>
         /// <param name="fileName">The savegame's file name (WITHOUT EXTENSION!)</param>
-        public override void Save(string fileName)
+        /// <param name="saveSpawnedPrefabs">Should <see cref="SpawnedPrefab"/>s in the map be saved or not? If this is <c>false</c>, only the <see cref="SaveableComponent"/>s that were added to the map at edit-time will be saved in their current state. Stuff like spawned grenades, dynamically spawned items, etc... won't survive the session!</param>
+        public override void Save(string fileName, bool saveSpawnedPrefabs = true)
         {
             if (busy)
             {
@@ -122,10 +123,10 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
             busy = true;
 
-            StartCoroutine(SaveCoroutine(fileName));
+            StartCoroutine(SaveCoroutine(fileName, saveSpawnedPrefabs));
         }
 
-        private IEnumerator SaveCoroutine(string fileName)
+        private IEnumerator SaveCoroutine(string fileName, bool saveSpawnedPrefabs)
         {
             CheckSavegamesDirectory();
 
@@ -181,7 +182,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
             XE_Prefabs.RemoveAll();
 
-            if (SpawnedPrefab.SPAWNED_PREFABS.Count != 0)
+            if (SpawnedPrefab.SPAWNED_PREFABS.Count != 0 && saveSpawnedPrefabs)
             {
                 for (int i = 0; i < SpawnedPrefab.SPAWNED_PREFABS.Count; ++i)
                 {

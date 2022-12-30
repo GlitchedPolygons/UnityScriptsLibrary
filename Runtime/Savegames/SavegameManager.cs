@@ -152,11 +152,21 @@ namespace GlitchedPolygons.SavegameFramework
 
         #endregion
 
+        /*
+        /// <summary>
+        /// Saves the game out to a <see cref="Stream"/>.
+        /// </summary>
+        /// <param name="destinationStream">The target <see cref="Stream"/> to write the savegame into.</param>
+        /// <param name="saveSpawnedPrefabs">Should <see cref="SpawnedPrefab"/>s in the map be saved or not? If this is <c>false</c>, only the <see cref="SaveableComponent"/>s that were added to the map at edit-time will be saved in their current state. Stuff like spawned grenades, dynamically spawned items, etc... won't survive the session!</param>
+        public abstract void Save(Stream destinationStream, bool saveSpawnedPrefabs = true);
+        */
+        
         /// <summary>
         /// Saves the game out to a time-stamped savegame file inside the <see cref="SavegameManager.savegamesDirectoryPath"/> folder.
         /// </summary>
         /// <param name="fileName">The savegame's file name (WITHOUT EXTENSION!)</param>
-        public abstract void Save(string fileName);
+        /// <param name="saveSpawnedPrefabs">Should <see cref="SpawnedPrefab"/>s in the map be saved or not? If this is <c>false</c>, only the <see cref="SaveableComponent"/>s that were added to the map at edit-time will be saved in their current state. Stuff like spawned grenades, dynamically spawned items, etc... won't survive the session!</param>
+        public abstract void Save(string fileName, bool saveSpawnedPrefabs = true);
 
         /// <summary>
         /// Loads a savegame file from inside the <see cref="SavegameManager.savegamesDirectoryPath"/>. <para> </para>

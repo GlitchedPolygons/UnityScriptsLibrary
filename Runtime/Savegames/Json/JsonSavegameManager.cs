@@ -69,7 +69,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
         }
 
         /// <inheritdoc cref="SavegameManager.Save"/>
-        public override void Save(string fileName)
+        public override void Save(string fileName, bool saveSpawnedPrefabs = true)
         {
             if (busy)
             {
@@ -78,10 +78,10 @@ namespace GlitchedPolygons.SavegameFramework.Json
 
             busy = true;
 
-            StartCoroutine(SaveCoroutine(fileName));
+            StartCoroutine(SaveCoroutine(fileName, saveSpawnedPrefabs));
         }
 
-        private IEnumerator SaveCoroutine(string fileName)
+        private IEnumerator SaveCoroutine(string fileName, bool saveSpawnedPrefabs)
         {
             CheckSavegamesDirectory();
 
@@ -136,7 +136,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
                 }
             }
 
-            if (SpawnedPrefab.SPAWNED_PREFABS.Count != 0)
+            if (SpawnedPrefab.SPAWNED_PREFABS.Count != 0 && saveSpawnedPrefabs)
             {
                 for (int i = 0; i < SpawnedPrefab.SPAWNED_PREFABS.Count; ++i)
                 {
