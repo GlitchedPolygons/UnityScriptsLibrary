@@ -8,7 +8,9 @@ namespace GlitchedPolygons.Utilities
 
         private BoxCollider boxCollider;
         private SphereCollider sphereCollider;
-        private static readonly Color TRIGGER_GIZMO_COLOR = new (1f, 0.5f, 0.0f, 0.3f);
+        
+        [SerializeField]
+        private Color triggerGizmoColor = new (1f, 0.5f, 0.0f, 0.3f);
 
         public void Refresh()
         {
@@ -29,10 +31,10 @@ namespace GlitchedPolygons.Utilities
             {
                 Gizmos.matrix = transform.localToWorldMatrix;
 
-                Gizmos.color = Colors.ORANGE;
+                Gizmos.color =  triggerGizmoColor * 1.2f;
                 Gizmos.DrawWireCube(boxCollider.center, boxCollider.size);
 
-                Gizmos.color = TRIGGER_GIZMO_COLOR;
+                Gizmos.color = triggerGizmoColor;
                 Gizmos.DrawCube(boxCollider.center, boxCollider.size);
             }
 
@@ -52,10 +54,10 @@ namespace GlitchedPolygons.Utilities
                     center.y * scale.y,
                     center.z * scale.z);
 
-                Gizmos.color = Colors.ORANGE;
+                Gizmos.color = triggerGizmoColor * 1.2f;
                 Gizmos.DrawWireSphere(position, sphereCollider.radius * radiusScale);
 
-                Gizmos.color = TRIGGER_GIZMO_COLOR;
+                Gizmos.color = triggerGizmoColor;
                 Gizmos.DrawSphere(position, sphereCollider.radius * radiusScale);
             }
         }
