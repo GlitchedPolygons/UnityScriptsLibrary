@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using GlitchedPolygons.Utilities;
 using GlitchedPolygons.Identification;
@@ -14,6 +15,9 @@ namespace GlitchedPolygons.TriggerVolumes
     [ExecuteInEditMode]
     [RequireComponent(typeof(ID))]
     [RequireComponent(typeof(Collider))]
+#if UNITY_EDITOR
+    [RequireComponent(typeof(ColliderGizmo))]
+#endif
     public class TriggerVolume : MonoBehaviour
     {
         /// <summary>
@@ -76,6 +80,10 @@ namespace GlitchedPolygons.TriggerVolumes
         /// <param name="firedEvents">The new amount of times the trigger has fired.</param>
         public void SetFiredEventsCount(int firedEvents) => this.firedEvents = firedEvents;
 
+        public event Action<Collider> EnteredTrigger;
+
+        public event Action<Collider> ExitedTrigger;
+
         protected ID id;
 
         /// <summary>
@@ -120,6 +128,7 @@ namespace GlitchedPolygons.TriggerVolumes
             collider.isTrigger = true;
 
             triggerObj.AddComponent<TriggerVolume>();
+            triggerObj.GetOrAddComponent<ColliderGizmo>().Refresh();
 
             UnityEditor.Selection.activeGameObject = triggerObj;
         }
@@ -152,50 +161,9 @@ namespace GlitchedPolygons.TriggerVolumes
             collider.isTrigger = true;
 
             triggerObj.AddComponent<TriggerVolume>();
+            triggerObj.GetOrAddComponent<ColliderGizmo>().Refresh();
 
             UnityEditor.Selection.activeGameObject = triggerObj;
-        }
-
-        private void OnDrawGizmos()
-        {
-            Vector3 scale = transform.localScale;
-
-            if (boxCollider == null)
-            {
-                boxCollider = GetComponent<BoxCollider>();
-            }
-
-            if (boxCollider != null)
-            {
-                Gizmos.matrix = transform.localToWorldMatrix;
-
-                Gizmos.color = Colors.ORANGE;
-                Gizmos.DrawWireCube(boxCollider.center, boxCollider.size);
-
-                Gizmos.color = TRIGGER_GIZMO_COLOR;
-                Gizmos.DrawCube(boxCollider.center, boxCollider.size);
-            }
-
-            if (sphereCollider == null)
-            {
-                sphereCollider = GetComponent<SphereCollider>();
-            }
-
-            if (sphereCollider != null)
-            {
-                float radiusScale = Mathf.Max(scale.x, scale.y, scale.z);
-
-                Vector3 position = transform.position + new Vector3(
-                    sphereCollider.center.x * scale.x,
-                    sphereCollider.center.y * scale.y,
-                    sphereCollider.center.z * scale.z);
-
-                Gizmos.color = Colors.ORANGE;
-                Gizmos.DrawWireSphere(position, sphereCollider.radius * radiusScale);
-
-                Gizmos.color = TRIGGER_GIZMO_COLOR;
-                Gizmos.DrawSphere(position, sphereCollider.radius * radiusScale);
-            }
         }
 
         private void Awake()
