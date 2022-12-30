@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GlitchedPolygons.ExtensionMethods;
 using UnityEngine;
 using GlitchedPolygons.SavegameFramework;
+using GlitchedPolygons.TriggerVolumes;
 using GlitchedPolygons.Utilities;
 using UnityEngine.SceneManagement;
 
@@ -15,23 +17,23 @@ namespace GlitchedPolygons.Courier
     /// and then spawning/loading those in the new map.<para> </para>
     /// 
     /// You could either manually add the <see cref="SpawnedPrefab"/>s that you want to carry over via the <see cref="Add"/> method,
-    /// or you could also use a <see cref="TriggerVolumes.TriggerVolume"/> and do it from there OnTriggerEnter
-    /// (most likely when you're transitioning maps when reaching a specific location in the world).<para> </para>
+    /// or you could also use a trigger volume and do it from there OnTriggerEnter
+    /// (most likely when you're transitioning maps when reaching a specific location in the world). To do so, the <see cref="Courier"/> needs to have a trigger <see cref="Collider"/> setup and attached to the same <see cref="GameObject"/>.<para> </para>
     ///
     /// Make sure that there is exactly one (and only one!) <see cref="Courier"/> in every scene!<para> </para>
     ///
     /// For <see cref="SaveableComponent"/>s that are transported to another map: unlike <see cref="SpawnedPrefab"/>s, these are created at edit-time and not at runtime.
     /// That means that there needs to be a way to identify them bi-directionally! Otherwise, you would be capable of bringing an object from e.g. map 1 into map 2, and then re-carry it back to map 1 and end up having two of those objects in total... yea...<para> </para>
     ///
-    /// To solve this, the <see cref="Courier"/> only carries <see cref="SaveableComponent"/>s 
+    /// To solve this, the <see cref="Courier"/> only carries <see cref="CourierPackage"/>s 
     /// 
     /// Note that this internally makes use of the <see cref="SavegameFramework"/> and its <see cref="SaveableComponent"/> technology
-    /// as a means of serializing state and handling map transitions. Make sure to read that documentation first if you care about how 
+    /// as a means of serializing the state and handling map transitions. Make sure to read that documentation first if you care about how 
     /// how this all works under the hood :)<para> </para>
     /// </summary>
     /// 
     /// <remarks>
-    /// Note that the <see cref="Courier"/> only transports your stuff over into maps that you load with it (either via the <see cref="LoadSceneByIndex"/> or <see cref="LoadSceneByName"/> method).<para> </para>
+    /// Note that the <see cref="Courier"/> only transports your stuff over into maps if you load maps using its methods instead of the default Unity scene loading methods (either via the <see cref="LoadSceneByIndex"/> or <see cref="LoadSceneByName"/> Courier method).<para> </para>
     /// 
     /// World transitions that are externally triggered from other scripts will not instruct the <see cref="Courier"/> to carry over objects in any way.
     /// </remarks>
@@ -46,16 +48,54 @@ namespace GlitchedPolygons.Courier
         [SerializeField]
         private List<SpawnedPrefab> spawnedPrefabs = new(16);
 
+        private Collider thisCollider = null;
+
         private Coroutine sceneLoadingCoroutine = null;
 
         private void OnEnable()
         {
+            if (thisCollider == null)
+            {
+                thisCollider = GetComponent<Collider>();
+            }
+            
+#if UNITY_EDITOR
+            if (thisCollider != null)
+            {
+                gameObject.GetOrAddComponent<ColliderGizmo>();
+            }
+#endif
+            
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnTriggerEnter(Collider intruder)
+        {
+            SpawnedPrefab spawnedPrefab = intruder.GetComponent<SpawnedPrefab>();
+
+            if (spawnedPrefab == null)
+            {
+                return;
+            }
+            
+            Add(spawnedPrefab);
+        }
+
+        private void OnTriggerExit(Collider intruder)
+        {
+            SpawnedPrefab spawnedPrefab = intruder.GetComponent<SpawnedPrefab>();
+
+            if (spawnedPrefab == null)
+            {
+                return;
+            }
+            
+            Remove(spawnedPrefab);
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
@@ -66,7 +106,7 @@ namespace GlitchedPolygons.Courier
         /// <summary>
         /// Tells the <see cref="Courier"/> to carry <paramref name="spawnedPrefab"/> over to the next map it loads.
         /// </summary>
-        /// <param name="spawnedPrefab"></param>
+        /// <param name="spawnedPrefab"><see cref="SpawnedPrefab"/></param>
         public void Add(SpawnedPrefab spawnedPrefab)
         {
             if (spawnedPrefabs.Contains(spawnedPrefab))
@@ -77,6 +117,10 @@ namespace GlitchedPolygons.Courier
             spawnedPrefabs.Add(spawnedPrefab);
         }
 
+        /// <summary>
+        /// Tells the <see cref="Courier"/> to NOT carry <paramref name="spawnedPrefab"/> over to the next map if it previously was in the list of objects to transfer.
+        /// </summary>
+        /// <param name="spawnedPrefab"><see cref="SpawnedPrefab"/></param>
         public void Remove(SpawnedPrefab spawnedPrefab)
         {
             if (spawnedPrefabs.Contains(spawnedPrefab))
@@ -107,6 +151,7 @@ namespace GlitchedPolygons.Courier
                 {
                     continue;
                 }
+                
                 DontDestroyOnLoad(spawnedPrefab.gameObject);
             }   
         }
