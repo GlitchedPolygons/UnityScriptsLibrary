@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,8 @@ namespace GlitchedPolygons.SavegameFramework.Json
         /// Should the generated JSON be nicely formatted and indented?
         /// </summary>
         [SerializeField]
-        [Header("This is the JsonSavegameManager component.\nThere should be exactly one in every scene.\n\nThis component provides methods for saving and loading savegames.\n\nIf you encrypt and/or compress the savegames, make ABSOLUTELY sure that the \"key\", \"encrypt\", \"compress\" and \"iterationsOfPBKDF2\" settings match up in EVERY SavegameManager instance throughout the entire game, otherwise you might not be able to load one or more savegames at some point.\n\nMake sure that the key field is at least 32 characters long.\n\nSaving will result in a savegame file placed inside the savegames directory path (by default \"Applications.persistentDataPath/Savegames/\"). Check out the (well documented) source code for more information.\n")]
+        [Header(
+            "This is the JsonSavegameManager component.\nThere should be exactly one in every scene.\n\nThis component provides methods for saving and loading savegames.\n\nIf you encrypt and/or compress the savegames, make ABSOLUTELY sure that the \"key\", \"encrypt\", \"compress\" and \"iterationsOfPBKDF2\" settings match up in EVERY SavegameManager instance throughout the entire game, otherwise you might not be able to load one or more savegames at some point.\n\nMake sure that the key field is at least 32 characters long.\n\nSaving will result in a savegame file placed inside the savegames directory path (by default \"Applications.persistentDataPath/Savegames/\"). Check out the (well documented) source code for more information.\n")]
         private bool prettyPrint = false;
 
         /// <summary>
@@ -68,8 +70,8 @@ namespace GlitchedPolygons.SavegameFramework.Json
             SpawnedPrefab.SPAWNED_PREFABS.Clear();
         }
 
-        /// <inheritdoc cref="SavegameManager.Save"/>
-        public override void Save(string fileName)
+        /// <inheritdoc cref="SavegameManager.Save(Stream)"/>
+        public override void Save(Stream destinationStream)
         {
             if (busy)
             {
@@ -78,13 +80,28 @@ namespace GlitchedPolygons.SavegameFramework.Json
 
             busy = true;
 
-            StartCoroutine(SaveCoroutine(fileName));
+            StartCoroutine(SaveCoroutine(destinationStream));
         }
 
-        private IEnumerator SaveCoroutine(string fileName)
+        /// <inheritdoc cref="SavegameManager.Save(string)"/>
+        public override void Save(string fileName)
         {
+            if (busy)
+            {
+                return;
+            }
+
             CheckSavegamesDirectory();
 
+            using var fileStream = new FileStream(Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}"), FileMode.Create, FileAccess.ReadWrite);
+
+            busy = true;
+
+            StartCoroutine(SaveCoroutine(fileStream));
+        }
+
+        private IEnumerator SaveCoroutine(Stream destinationStream)
+        {
             OnSaving();
 
             yield return YieldInstructions.WaitForEndOfFrame;
@@ -157,7 +174,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     if (component != null)
                     {
                         component.BeforeSaving();
-                        
+
                         spawnedPrefabTuple.json = JsonUtility.ToJson(component);
                     }
 
@@ -183,8 +200,6 @@ namespace GlitchedPolygons.SavegameFramework.Json
 
             var task = Task.Run(() =>
             {
-                string filePath = Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}");
-
                 string json = JsonUtility.ToJson(outputSavegame, prettyPrint);
 
                 byte[] outputBytes = json.UTF8GetBytes();
@@ -202,7 +217,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     outputBytes = salt.Concat(SymmetricCryptography.Encrypt(outputBytes, key, Convert.ToBase64String(salt), iterationsOfPBKDF2)).ToArray();
                 }
 
-                File.WriteAllBytes(filePath, outputBytes);
+                destinationStream.Write(outputBytes);
             });
 
             while (!task.IsCompleted)
@@ -239,7 +254,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
             OnReady();
         }
 
-        /// <inheritdoc cref="SavegameManager.Load"/>
+        /// <inheritdoc cref="SavegameManager.Load(string)"/>
         public override void Load(string fileName)
         {
             if (busy)
@@ -247,24 +262,15 @@ namespace GlitchedPolygons.SavegameFramework.Json
                 return;
             }
 
-            busy = true;
+            CheckSavegamesDirectory();
 
-            StartCoroutine(LoadCoroutine(fileName));
-        }
-
-        private IEnumerator LoadCoroutine(string fileName)
-        {
             if (string.IsNullOrEmpty(fileName))
             {
 #if UNITY_EDITOR
                 Debug.LogError($"{nameof(JsonSavegameManager)}: Couldn't load savegame! The specified {nameof(fileName)} string is null or empty.");
 #endif
-                yield break;
+                return;
             }
-
-            CheckSavegamesDirectory();
-
-            OnLoading();
 
             string filePath = Path.Combine(savegamesDirectoryPath, $"{fileName}{savegameFileExtension}");
 
@@ -273,8 +279,31 @@ namespace GlitchedPolygons.SavegameFramework.Json
 #if UNITY_EDITOR
                 Debug.LogError($"{nameof(JsonSavegameManager)}: Couldn't load savegame! The specified file path does not exist or is invalid.");
 #endif
-                yield break;
+                return;
             }
+
+            using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+
+            busy = true;
+
+            StartCoroutine(LoadCoroutine(fileStream));
+        }
+
+        public override void Load(Stream sourceStream)
+        {
+            if (busy)
+            {
+                return;
+            }
+
+            busy = true;
+
+            StartCoroutine(LoadCoroutine(sourceStream));
+        }
+
+        private IEnumerator LoadCoroutine(Stream sourceStream)
+        {
+            OnLoading();
 
             DateTime startUtc = DateTime.UtcNow;
             TimeSpan timeout = TimeSpan.FromSeconds(loadingTimeoutSeconds);
@@ -283,7 +312,11 @@ namespace GlitchedPolygons.SavegameFramework.Json
             {
                 if (!encrypt && !compress)
                 {
-                    transitorySavegame = JsonUtility.FromJson<JsonSavegame>(File.ReadAllText(filePath));
+                    using var streamReader = new StreamReader(sourceStream);
+
+                    string json = streamReader.ReadToEnd();
+
+                    transitorySavegame = JsonUtility.FromJson<JsonSavegame>(json);
                 }
                 else
                 {
@@ -292,19 +325,29 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     if (encrypt)
                     {
                         using var dataStream = new MemoryStream();
-                        using var fileStream = new FileStream(filePath, FileMode.Open);
 
                         byte[] salt = new byte[64];
-                        fileStream.Read(salt, 0, salt.Length);
+                        sourceStream.Read(salt, 0, salt.Length);
 
-                        fileStream.CopyTo(dataStream);
+                        sourceStream.CopyTo(dataStream);
 
                         data = SymmetricCryptography.Decrypt(dataStream.ToArray(), key, Convert.ToBase64String(salt), iterationsOfPBKDF2);
                     }
 
                     if (compress)
                     {
-                        data = GZip.Decompress(data ?? File.ReadAllBytes(filePath));
+                        if (data is not null)
+                        {
+                            data = GZip.Decompress(data);
+                        }
+                        else
+                        {
+                            using MemoryStream decompressed = new MemoryStream();
+                            using GZipStream gzip = new GZipStream(sourceStream, CompressionMode.Decompress);
+
+                            gzip.CopyTo(decompressed);
+                            data = decompressed.ToArray();
+                        }
                     }
 
                     transitorySavegame = JsonUtility.FromJson<JsonSavegame>(data.UTF8GetString());
@@ -329,7 +372,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
             if (task.IsCompletedSuccessfully && transitorySavegame is not null)
             {
                 AsyncOperation loadOperation = null;
-                
+
                 if (loadByName)
                 {
                     string sceneName = transitorySavegame.mapName;
@@ -348,7 +391,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     SceneManager.sceneLoaded += OnNewSceneLoaded;
                     loadOperation = SceneManager.LoadSceneAsync(transitorySavegame.mapIndex);
                 }
-                
+
                 if (loadOperation != null)
                 {
                     while (!loadOperation.isDone)
@@ -359,12 +402,12 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     loadOperation.allowSceneActivation = true;
                 }
             }
+#if UNITY_EDITOR
             else
             {
-#if UNITY_EDITOR
-                Debug.LogError($"{nameof(JsonSavegameManager)}: Failed to load savegame {filePath}");
-#endif
+                Debug.LogError($"{nameof(JsonSavegameManager)}: Failed to load savegame {sourceStream}");
             }
+#endif
         }
 
         /// <summary>

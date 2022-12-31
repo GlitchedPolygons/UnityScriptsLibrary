@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace GlitchedPolygons.ExtensionMethods
 {
@@ -30,6 +31,44 @@ namespace GlitchedPolygons.ExtensionMethods
                 DeleteRecursively(subDir);
                 subDir.Delete();
             }
+        }
+
+        /// <summary>
+        /// Gets the most recent file from a <see cref="DirectoryInfo"/>.
+        /// The file's last write time is used for comparison.
+        /// </summary>
+        /// <param name="dir">The directory to scan.</param>
+        /// <param name="searchPattern">Search pattern (e.g. <c>*.sav</c>)</param>
+        /// <returns><c>null</c> if the <paramref name="dir"/> does not exist on disk or is empty; the newest <see cref="FileInfo"/> otherwise.</returns>
+        public static FileInfo GetNewestFile(this DirectoryInfo dir, string searchPattern)
+        {
+            if (dir is null || !dir.Exists)
+            {
+                return null;
+            }
+            
+            FileInfo[] files = dir.GetFiles(searchPattern);
+            if (files.Length == 0)
+            {
+                return null;
+            }
+
+            DateTime lastWriteTime = DateTime.MinValue;
+            FileInfo lastWrittenFile = null;
+
+            for (int i = files.Length - 1; i >= 0; --i)
+            {
+                FileInfo file = files[i];
+                if (file.LastWriteTime <= lastWriteTime)
+                {
+                    continue;
+                }
+
+                lastWrittenFile = file;
+                lastWriteTime = file.LastWriteTime;
+            }
+
+            return lastWrittenFile;
         }
     }
 }

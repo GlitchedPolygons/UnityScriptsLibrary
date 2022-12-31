@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using GlitchedPolygons.ExtensionMethods;
 using UnityEngine;
@@ -38,13 +39,14 @@ namespace GlitchedPolygons.SavegameFramework.Xml
         #endregion
 
         #region Inspector variables
-        
+
         /// <summary>
         /// Should the generated xml be nicely formatted and indented with whitespaces and line breaks?<para> </para>
         /// This only makes sense if you're not encrypting and not compressing the savegame, since it's a feature intended to enhance human readability of the xml (which falls away when encrypting/compressing).
         /// </summary>
         [SerializeField]
-        [Header("This is the XmlSavegameManager component.\nThere should be exactly one in every scene.\n\nThis component provides methods for saving and loading savegames.\n\nIf you encrypt and/or compress the savegames, make ABSOLUTELY sure that the \"key\", \"encrypt\", \"compress\" and \"iterationsOfPBKDF2\" settings match up in EVERY XmlSavegameManager instance throughout the entire game, otherwise you might not be able to load one or more savegames at some point.\n\nMake sure that the key field is at least 32 characters long.\n\nSaving will result in a savegame file placed inside the savegames directory path (by default \"Applications.persistentDataPath/Savegames\"). Check out the (well documented) source code for more information.\n\nLoading a savegame will cause a chain reaction of events:\n\n1.\nReading savegame file (eventually decompress/decrypt).\n\n2.\nPassing it to a transitory savegame variable that survives the map transition.\n\n3.\nDetermining which scene to load, trigger the map transition and pass the transitory savegame variable to the new scene's XmlSavegameManager component.\n\n4.\nActually load the savegame's data into the scene; spawn any saved prefabs that weren't there at edit-time.\n\n5.\nErase traces.\n\nYou can gather all the SaveableComponents in the scene at edit-time automatically: there is a component context menu entry that does that.\n\nNote that only max. 1 SaveableComponent should ever be in a GameObject's hierarchy (e.g. a saveable Prop.cs component shouldn't have any child GameObjects with other SaveableComponents under it!).\nIdeally you would have one SaveableComponent at the root GameObject of your prefabs.\n")]
+        [Header(
+            "This is the XmlSavegameManager component.\nThere should be exactly one in every scene.\n\nThis component provides methods for saving and loading savegames.\n\nIf you encrypt and/or compress the savegames, make ABSOLUTELY sure that the \"key\", \"encrypt\", \"compress\" and \"iterationsOfPBKDF2\" settings match up in EVERY XmlSavegameManager instance throughout the entire game, otherwise you might not be able to load one or more savegames at some point.\n\nMake sure that the key field is at least 32 characters long.\n\nSaving will result in a savegame file placed inside the savegames directory path (by default \"Applications.persistentDataPath/Savegames\"). Check out the (well documented) source code for more information.\n\nLoading a savegame will cause a chain reaction of events:\n\n1.\nReading savegame file (eventually decompress/decrypt).\n\n2.\nPassing it to a transitory savegame variable that survives the map transition.\n\n3.\nDetermining which scene to load, trigger the map transition and pass the transitory savegame variable to the new scene's XmlSavegameManager component.\n\n4.\nActually load the savegame's data into the scene; spawn any saved prefabs that weren't there at edit-time.\n\n5.\nErase traces.\n\nYou can gather all the SaveableComponents in the scene at edit-time automatically: there is a component context menu entry that does that.\n\nNote that only max. 1 SaveableComponent should ever be in a GameObject's hierarchy (e.g. a saveable Prop.cs component shouldn't have any child GameObjects with other SaveableComponents under it!).\nIdeally you would have one SaveableComponent at the root GameObject of your prefabs.\n")]
         private bool indent = false;
 
         /// <summary>
@@ -120,15 +122,34 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                 return;
             }
 
+            CheckSavegamesDirectory();
+            
+            using var fileStream = new FileStream(Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}"), FileMode.Create, FileAccess.ReadWrite);
+
             busy = true;
 
-            StartCoroutine(SaveCoroutine(fileName));
+            StartCoroutine(SaveCoroutine(fileStream));
         }
 
-        private IEnumerator SaveCoroutine(string fileName)
+        /// <summary>
+        /// Saves the game out to a <paramref name="destinationStream"/>.
+        /// </summary>
+        /// <seealso cref="Stream"/>
+        /// <param name="destinationStream">The <see cref="Stream"/> to write the savegame into.</param>
+        public override void Save(Stream destinationStream)
         {
-            CheckSavegamesDirectory();
+            if (busy)
+            {
+                return;
+            }
 
+            busy = true;
+
+            StartCoroutine(SaveCoroutine(destinationStream));
+        }
+
+        private IEnumerator SaveCoroutine(Stream destinationStream)
+        {
             OnSaving();
 
             yield return YieldInstructions.WaitForEndOfFrame;
@@ -156,7 +177,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                     {
                         continue;
                     }
-                    
+
                     component.BeforeSaving();
 
                     saveableComponentsXmlBuffer.Add((component.ID, component.GetXml()));
@@ -193,16 +214,16 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                     }
 
                     XElement xml = null;
-                    
+
                     XmlSaveableComponent component = prefab.GetSaveableComponent() as XmlSaveableComponent;
 
                     if (component != null)
                     {
                         component.BeforeSaving();
-                        
+
                         xml = component.GetXml();
                     }
-                    
+
                     spawnedPrefabsXmlBuffer.Add((prefab.GetResourcePath(), xml));
 
                     if (i % batchSize == 0)
@@ -237,11 +258,9 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                         new XElement("component", resourcePathXmlTuple.Item2))));
                 }
 
-                string filePath = Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}");
-
                 if (!encrypt && !compress)
                 {
-                    savegame?.Save(filePath, indent ? SaveOptions.None : SaveOptions.DisableFormatting);
+                    savegame?.Save(destinationStream, indent ? SaveOptions.None : SaveOptions.DisableFormatting);
                 }
                 else
                 {
@@ -266,7 +285,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                         xmlBytes = salt.Concat(SymmetricCryptography.Encrypt(xmlBytes, key, Convert.ToBase64String(salt), iterationsOfPBKDF2)).ToArray();
                     }
 
-                    File.WriteAllBytes(filePath, xmlBytes);
+                    destinationStream.Write(xmlBytes);
                 }
             });
 
@@ -323,24 +342,13 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                 return;
             }
 
-            busy = true;
-
-            StartCoroutine(LoadCoroutine(fileName));
-        }
-
-        private IEnumerator LoadCoroutine(string fileName)
-        {
             if (fileName.NullOrEmpty())
             {
 #if UNITY_EDITOR
                 Debug.LogError($"{nameof(XmlSavegameManager)}: Couldn't load savegame! The specified {nameof(fileName)} string is null or empty.");
 #endif
-                yield break;
+                return;
             }
-
-            CheckSavegamesDirectory();
-
-            OnLoading();
 
             string filePath = Path.Combine(savegamesDirectoryPath, $"{fileName}{savegameFileExtension}");
 
@@ -349,8 +357,40 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 #if UNITY_EDITOR
                 Debug.LogError($"{nameof(XmlSavegameManager)}: Couldn't load savegame! The specified file path does not exist or is invalid.");
 #endif
-                yield break;
+                return;
             }
+            
+            CheckSavegamesDirectory();
+
+            using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+
+            busy = true;
+
+            StartCoroutine(LoadCoroutine(fileStream));
+        }
+
+        /// <summary>
+        /// Loads a savegame from a <see cref="Stream"/>.<para> </para>
+        /// This will cause a chain reaction of method calls and procedures in order to make the loading procedure
+        /// and map transition as smooth as possible.<para> </para>
+        /// Check out the documentation of the implementing child classes to find out more about how it works (e.g. <see cref="GlitchedPolygons.SavegameFramework.Xml.XmlSavegameManager"/>).
+        /// </summary>
+        /// <param name="sourceStream">The <see cref="Stream"/> to read the savegame data from.</param>
+        public override void Load(Stream sourceStream)
+        {
+            if (busy)
+            {
+                return;
+            }
+
+            busy = true;
+
+            StartCoroutine(LoadCoroutine(sourceStream));
+        }
+
+        private IEnumerator LoadCoroutine(Stream sourceStream)
+        {
+            OnLoading();
 
             DateTime startUtc = DateTime.UtcNow;
             TimeSpan timeout = TimeSpan.FromSeconds(loadingTimeoutSeconds);
@@ -359,7 +399,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
             {
                 if (!encrypt && !compress)
                 {
-                    transitorySavegame = XDocument.Load(filePath);
+                    transitorySavegame = XDocument.Load(sourceStream);
                 }
                 else
                 {
@@ -368,19 +408,29 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                     if (encrypt)
                     {
                         using var dataStream = new MemoryStream();
-                        using var fileStream = new FileStream(filePath, FileMode.Open);
 
                         byte[] salt = new byte[64];
-                        fileStream.Read(salt, 0, salt.Length);
+                        sourceStream.Read(salt, 0, salt.Length);
 
-                        fileStream.CopyTo(dataStream);
+                        sourceStream.CopyTo(dataStream);
 
                         data = SymmetricCryptography.Decrypt(dataStream.ToArray(), key, Convert.ToBase64String(salt), iterationsOfPBKDF2);
                     }
 
                     if (compress)
                     {
-                        data = GZip.Decompress(data ?? File.ReadAllBytes(filePath));
+                        if (data is not null)
+                        {
+                            data = GZip.Decompress(data);
+                        }
+                        else
+                        {
+                            using MemoryStream decompressed = new MemoryStream();
+                            using GZipStream gzip = new GZipStream(sourceStream, CompressionMode.Decompress);
+
+                            gzip.CopyTo(decompressed);
+                            data = decompressed.ToArray();
+                        }
                     }
 
                     using var memoryStream = new MemoryStream(data ?? Array.Empty<byte>());
@@ -443,12 +493,12 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                     loadOperation.allowSceneActivation = true;
                 }
             }
+#if UNITY_EDITOR
             else
             {
-#if UNITY_EDITOR
-                Debug.LogError($"{nameof(XmlSavegameManager)}: Failed to load savegame {filePath}");
-#endif
+                Debug.LogError($"{nameof(XmlSavegameManager)}: Failed to load savegame {sourceStream}");
             }
+#endif
         }
 
 
@@ -562,7 +612,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                         if (components.TryGetValue(component.ID, out XElement xml))
                         {
                             component.LoadXml(xml);
-                            
+
                             component.AfterLoading();
                         }
                         else
@@ -595,7 +645,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
                                 if (component != null)
                                 {
                                     component.LoadXml(prefab.Element("component"));
-                                    
+
                                     component.AfterLoading();
                                 }
                             }
