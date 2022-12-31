@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using GlitchedPolygons.ExtensionMethods;
 using GlitchedPolygons.Utilities;
 using UnityEngine;
 
@@ -159,6 +160,14 @@ namespace GlitchedPolygons.SavegameFramework
         public abstract void Save(string fileName);
 
         /// <summary>
+        /// Saves the game out to a <paramref name="destinationStream"/>.
+        /// </summary>
+        /// <remarks>The target output <see cref="Stream"/> will be closed and disposed by this method, so do NOT use it afterwards. A <c>using</c> statement is therefore not needed!</remarks>
+        /// <seealso cref="Stream"/>
+        /// <param name="destinationStream">The <see cref="Stream"/> to write the savegame into. This will be closed and disposed by this method, so make sure not to use it anymore afterwards!</param>
+        public abstract void Save(Stream destinationStream);
+
+        /// <summary>
         /// Loads a savegame file from inside the <see cref="SavegameManager.savegamesDirectoryPath"/>. <para> </para>
         /// The <paramref name="fileName"/> parameter is just the savegame's file name (local to the <see cref="SavegameManager.savegamesDirectoryPath"/> and WITHOUT THE FILE EXTENSION).<para> </para>
         /// This will cause a chain reaction of method calls and procedures in order to make the loading procedure
@@ -169,6 +178,16 @@ namespace GlitchedPolygons.SavegameFramework
         /// <seealso cref="GlitchedPolygons.SavegameFramework.Xml.XmlSavegameManager"/>
         /// <seealso cref="GlitchedPolygons.SavegameFramework.Json.JsonSavegameManager"/>
         public abstract void Load(string fileName);
+
+        /// <summary>
+        /// Loads a savegame from a <see cref="Stream"/>.<para> </para>
+        /// This will cause a chain reaction of method calls and procedures in order to make the loading procedure
+        /// and map transition as smooth as possible.<para> </para>
+        /// Check out the documentation of the implementing child classes to find out more about how it works (e.g. <see cref="GlitchedPolygons.SavegameFramework.Xml.XmlSavegameManager"/>).
+        /// </summary>
+        /// <remarks>The source input <see cref="Stream"/> will be closed and disposed by this method, so do NOT use it afterwards. A <c>using</c> statement is therefore not needed!</remarks>
+        /// <param name="sourceStream">The <see cref="Stream"/> to read the savegame data from.</param>
+        public abstract void Load(Stream sourceStream);
 
         /// <summary>
         /// Loads the most recent savegame file automatically.
@@ -260,35 +279,17 @@ namespace GlitchedPolygons.SavegameFramework
         }
 
         /// <summary>
-        /// Gets the newest, most recent savegame file name; without its extension and local to the <see cref="savegamesDirectoryPath"/>, such that it can be loaded seamlessly into a savegame manager's load function.
+        /// Gets the newest, most recent savegame file name; without its extension and local to the <see cref="savegamesDirectoryPath"/>,
+        /// such that it can be loaded seamlessly into a savegame manager's load function.
         /// </summary>
         protected string GetNewestSavegame()
         {
             CheckSavegamesDirectory();
 
-            FileInfo[] files = new DirectoryInfo(savegamesDirectoryPath).GetFiles($"*{savegameFileExtension}");
-            if (files.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            DateTime lastWriteTime = DateTime.MinValue;
-            FileInfo lastWrittenFile = null;
-
-            for (int i = files.Length - 1; i >= 0; --i)
-            {
-                FileInfo file = files[i];
-                if (file.LastWriteTime <= lastWriteTime)
-                {
-                    continue;
-                }
-
-                lastWrittenFile = file;
-                lastWriteTime = file.LastWriteTime;
-            }
-
-            return lastWrittenFile != null
-                ? Path.GetFileNameWithoutExtension(lastWrittenFile.Name)
+            FileInfo newestSavegameFile = new DirectoryInfo(savegamesDirectoryPath).GetNewestFile($"*{savegameFileExtension}");
+            
+            return newestSavegameFile != null
+                ? Path.GetFileNameWithoutExtension(newestSavegameFile.Name)
                 : string.Empty;
         }
     }
