@@ -93,7 +93,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
 
             CheckSavegamesDirectory();
 
-            using var fileStream = new FileStream(Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}"), FileMode.Create, FileAccess.ReadWrite);
+            var fileStream = new FileStream(Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}"), FileMode.Create, FileAccess.ReadWrite);
 
             busy = true;
 
@@ -218,6 +218,7 @@ namespace GlitchedPolygons.SavegameFramework.Json
                 }
 
                 destinationStream.Write(outputBytes);
+                destinationStream.Dispose();
             });
 
             while (!task.IsCompleted)
@@ -282,13 +283,14 @@ namespace GlitchedPolygons.SavegameFramework.Json
                 return;
             }
 
-            using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
             busy = true;
 
             StartCoroutine(LoadCoroutine(fileStream));
         }
 
+        /// <inheritdoc cref="SavegameManager.Load(Stream)"/>
         public override void Load(Stream sourceStream)
         {
             if (busy)
@@ -351,6 +353,8 @@ namespace GlitchedPolygons.SavegameFramework.Json
                     }
 
                     transitorySavegame = JsonUtility.FromJson<JsonSavegame>(data.UTF8GetString());
+                    
+                    sourceStream.Dispose();
                 }
             });
 
@@ -405,7 +409,12 @@ namespace GlitchedPolygons.SavegameFramework.Json
 #if UNITY_EDITOR
             else
             {
-                Debug.LogError($"{nameof(JsonSavegameManager)}: Failed to load savegame {sourceStream}");
+                Debug.LogError($"{nameof(JsonSavegameManager)}: Failed to load savegame from {sourceStream}. Thrown exception: {task.Exception}");
+                
+                OnLoadFailed();
+
+                yield return YieldInstructions.WaitForFixedUpdate;
+                OnReady();
             }
 #endif
         }

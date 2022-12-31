@@ -111,10 +111,7 @@ namespace GlitchedPolygons.SavegameFramework.Xml
             SpawnedPrefab.SPAWNED_PREFABS.Clear();
         }
 
-        /// <summary>
-        /// Saves the game out to a time-stamped savegame file inside the <see cref="SavegameManager.savegamesDirectoryPath"/> folder.
-        /// </summary>
-        /// <param name="fileName">The savegame's file name (WITHOUT EXTENSION!)</param>
+        /// <inheritdoc cref="SavegameManager.Save(string)"/>
         public override void Save(string fileName)
         {
             if (busy)
@@ -123,19 +120,15 @@ namespace GlitchedPolygons.SavegameFramework.Xml
             }
 
             CheckSavegamesDirectory();
-            
-            using var fileStream = new FileStream(Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}"), FileMode.Create, FileAccess.ReadWrite);
+
+            var fileStream = new FileStream(Path.Combine(savegamesDirectoryPath, $"{fileName}_{DateTime.Now.ToString(TIME_FORMAT)}{savegameFileExtension}"), FileMode.Create, FileAccess.ReadWrite);
 
             busy = true;
 
             StartCoroutine(SaveCoroutine(fileStream));
         }
 
-        /// <summary>
-        /// Saves the game out to a <paramref name="destinationStream"/>.
-        /// </summary>
-        /// <seealso cref="Stream"/>
-        /// <param name="destinationStream">The <see cref="Stream"/> to write the savegame into.</param>
+        /// <inheritdoc cref="SavegameManager.Save(Stream)"/>
         public override void Save(Stream destinationStream)
         {
             if (busy)
@@ -287,6 +280,8 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
                     destinationStream.Write(xmlBytes);
                 }
+
+                destinationStream.Dispose();
             });
 
             while (!task.IsCompleted)
@@ -312,6 +307,10 @@ namespace GlitchedPolygons.SavegameFramework.Xml
             else
             {
                 OnSaveFailed();
+
+#if UNITY_EDITOR
+                Debug.LogError($"{nameof(XmlSavegameManager)}: Failed to create savegame into {destinationStream}. Thrown exception: {task.Exception}");
+#endif
             }
 
             if (collectGarbageOnSave)
@@ -359,23 +358,17 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 #endif
                 return;
             }
-            
+
             CheckSavegamesDirectory();
 
-            using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
             busy = true;
 
             StartCoroutine(LoadCoroutine(fileStream));
         }
 
-        /// <summary>
-        /// Loads a savegame from a <see cref="Stream"/>.<para> </para>
-        /// This will cause a chain reaction of method calls and procedures in order to make the loading procedure
-        /// and map transition as smooth as possible.<para> </para>
-        /// Check out the documentation of the implementing child classes to find out more about how it works (e.g. <see cref="GlitchedPolygons.SavegameFramework.Xml.XmlSavegameManager"/>).
-        /// </summary>
-        /// <param name="sourceStream">The <see cref="Stream"/> to read the savegame data from.</param>
+        /// <inheritdoc cref="SavegameManager.Load(Stream)"/>
         public override void Load(Stream sourceStream)
         {
             if (busy)
@@ -437,6 +430,8 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 
                     transitorySavegame = XDocument.Load(memoryStream);
                 }
+
+                sourceStream.Dispose();
             });
 
             while (!task.IsCompleted)
@@ -496,7 +491,12 @@ namespace GlitchedPolygons.SavegameFramework.Xml
 #if UNITY_EDITOR
             else
             {
-                Debug.LogError($"{nameof(XmlSavegameManager)}: Failed to load savegame {sourceStream}");
+                Debug.LogError($"{nameof(XmlSavegameManager)}: Failed to load savegame from {sourceStream}. Thrown exception: {task.Exception}");
+
+                OnLoadFailed();
+
+                yield return YieldInstructions.WaitForFixedUpdate;
+                OnReady();
             }
 #endif
         }

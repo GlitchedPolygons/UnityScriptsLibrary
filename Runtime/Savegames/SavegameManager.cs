@@ -162,8 +162,9 @@ namespace GlitchedPolygons.SavegameFramework
         /// <summary>
         /// Saves the game out to a <paramref name="destinationStream"/>.
         /// </summary>
+        /// <remarks>The target output <see cref="Stream"/> will be closed and disposed by this method, so do NOT use it afterwards. A <c>using</c> statement is therefore not needed!</remarks>
         /// <seealso cref="Stream"/>
-        /// <param name="destinationStream">The <see cref="Stream"/> to write the savegame into.</param>
+        /// <param name="destinationStream">The <see cref="Stream"/> to write the savegame into. This will be closed and disposed by this method, so make sure not to use it anymore afterwards!</param>
         public abstract void Save(Stream destinationStream);
 
         /// <summary>
@@ -184,6 +185,7 @@ namespace GlitchedPolygons.SavegameFramework
         /// and map transition as smooth as possible.<para> </para>
         /// Check out the documentation of the implementing child classes to find out more about how it works (e.g. <see cref="GlitchedPolygons.SavegameFramework.Xml.XmlSavegameManager"/>).
         /// </summary>
+        /// <remarks>The source input <see cref="Stream"/> will be closed and disposed by this method, so do NOT use it afterwards. A <c>using</c> statement is therefore not needed!</remarks>
         /// <param name="sourceStream">The <see cref="Stream"/> to read the savegame data from.</param>
         public abstract void Load(Stream sourceStream);
 
