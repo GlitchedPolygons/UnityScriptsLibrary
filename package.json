@@ -1,10 +1,13 @@
 {
   "name": "com.glitchedpolygons.unity.cslib",
   "displayName": "Glitched Polygons Scripts Library",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "unity": "2022.2",
   "description": "Reusable, modular C# scripts library for Unity projects.",
-  "author": {"name": "Glitched Polygons", "url" : "https://glitchedpolygons.com/"},
+  "author": {
+    "name": "Glitched Polygons",
+    "url": "https://glitchedpolygons.com/"
+  },
   "documentationUrl": "https://glitchedpolygons.github.io/UnityScriptsLibraryDocs/api/index.html",
   "licenseUrl": "https://raw.githubusercontent.com/GlitchedPolygons/UnityScriptsLibrary/master/LICENSE.md"
 }
