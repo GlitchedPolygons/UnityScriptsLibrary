@@ -1,4 +1,13 @@
-# [Glitched Polygons](https://glitchedpolygons.com/)
+> [!IMPORTANT]
+>
+> # **NOTICE:**
+>
+> ## Development of this project has been migrated to: https://codeberg.org/GlitchedPolygons/UnityScriptsLibrary
+>
+> ## All pull requests and issues on GitHub will be ignored from the 16th of August, 2025 onwards.
+
+# [Glitched Polygons](https://glitchedpolygons.com)
+
 ## Unity Scripts Library
 
 [![API](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/UnityScriptsLibraryDocs/api/index.html)
